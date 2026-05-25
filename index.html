@@ -1,0 +1,1317 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador de Crédito Interno - Viventa</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Manrope & Playfair Display -->
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- jsPDF CDN para generación de reportes en PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    
+    <script>
+        // Custom Tailwind Config aligning to Viventa Brand Guide
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        viventa: {
+                            magenta: '#E60064',   // 40% - Primary Actions & Highlights
+                            black: '#323755',     // 20% - Text & Headings & Heavy Accents
+                            gray: '#F2F2F2',      // 10% - Containers & Form Fills
+                            purple: '#7D96FF',    // 7%  - Secondary indicators & Buttons
+                            pink: '#FFA5C8',      // 3%  - Soft pill accents & backgrounds
+                            mist: '#00E6C8',      // 7%  - Highlight states & Success
+                            grayb: '#707282',     // 3%  - Borders, outlines and sub-text
+                            yellow: '#FFEB37',    // 7%  - Warm Warnings & Mentor Accents
+                            lightgreen: '#92F4E6' // 3%  - Mint badges
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Manrope', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Manrope', sans-serif;
+        }
+        /* Custom scrollbar matching brand colors */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #F2F2F2;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #707282;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #E60064;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen text-viventa-black antialiased flex flex-col justify-between">
+
+    <!-- HEADER DE HERRAMIENTA INTERNA -->
+    <header class="border-b border-viventa-gray bg-white sticky top-0 z-50 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 py-3.5 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-viventa-black flex items-center justify-center text-white">
+                    <i data-lucide="calculator" class="w-5 h-5 text-viventa-magenta"></i>
+                </div>
+                <div>
+                    <h1 class="font-extrabold text-xl text-viventa-black tracking-tight flex items-center gap-1.5">
+                        viventa <span class="text-xs px-2.5 py-0.5 rounded-full bg-viventa-magenta text-white font-bold tracking-normal uppercase">AGENT</span>
+                    </h1>
+                    <p class="text-[9px] text-viventa-grayb font-extrabold tracking-widest uppercase">Portal de Viabilidad Crediticia - Uso Exclusivo Comercial</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2 bg-viventa-gray px-4 py-2 rounded-xl text-xs text-viventa-black font-bold">
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span>Motor de Decisión Conectado</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTAINER -->
+    <main class="max-w-6xl mx-auto px-4 py-6 flex-grow w-full space-y-6">
+        
+        <!-- STEP INDICATOR -->
+        <div class="bg-white border border-viventa-gray rounded-2xl p-4 flex flex-col md:flex-row items-center justify-between gap-4 shadow-sm">
+            <div>
+                <span class="text-[10px] font-bold tracking-wider text-viventa-magenta uppercase">Proceso de Simulación</span>
+                <h2 class="text-lg font-extrabold text-viventa-black">Evaluación de Capacidad Hipotecaria (Ley 546/99)</h2>
+            </div>
+            
+            <!-- Step dots with uniform style -->
+            <div class="flex items-center gap-3">
+                <div class="flex items-center gap-1.5 step-node active" data-step="1">
+                    <span class="step-circle w-6 h-6 rounded-full bg-viventa-magenta text-white text-[11px] font-bold flex items-center justify-center">1</span>
+                    <span class="step-label text-xs font-bold text-viventa-magenta">Sujeto</span>
+                </div>
+                <div class="w-6 h-[2px] bg-viventa-gray"></div>
+                <div class="flex items-center gap-1.5 step-node" data-step="2">
+                    <span class="step-circle w-6 h-6 rounded-full bg-viventa-gray text-viventa-grayb text-[11px] font-bold flex items-center justify-center">2</span>
+                    <span class="step-label text-xs font-bold text-viventa-grayb">Egresos & Buró</span>
+                </div>
+                <div class="w-6 h-[2px] bg-viventa-gray" id="line-step-cotitular" style="display:none;"></div>
+                <div class="flex items-center gap-1.5 step-node" data-step="3" id="step-node-cotitular" style="display: none;">
+                    <span class="step-circle w-6 h-6 rounded-full bg-viventa-gray text-viventa-grayb text-[11px] font-bold flex items-center justify-center">3</span>
+                    <span class="step-label text-xs font-bold text-viventa-grayb">Co-Titular</span>
+                </div>
+                <div class="w-6 h-[2px] bg-viventa-gray"></div>
+                <div class="flex items-center gap-1.5 step-node" data-step="4" id="step-node-final">
+                    <span class="step-circle w-6 h-6 rounded-full bg-viventa-gray text-viventa-grayb text-[11px] font-bold flex items-center justify-center">3</span>
+                    <span class="step-label text-xs font-bold text-viventa-grayb">Viabilidad</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- CORRECTED PERSISTENT TOP LIVE DASHBOARD (Horizontal SaaS Panel) -->
+        <div class="bg-white rounded-2xl border border-viventa-gray shadow-sm p-5 space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                <div class="flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-viventa-magenta animate-ping"></span>
+                    <h4 class="text-xs font-extrabold text-viventa-black uppercase tracking-wider">Dashboard de Capacidad en Tiempo Real (Ley de Vivienda 546/99)</h4>
+                </div>
+                <!-- Dynamic Semaphore Status Pill -->
+                <div id="live-semaphore" class="px-3 py-1 rounded-full text-xs font-bold bg-viventa-gray text-viventa-grayb transition-all duration-300">
+                    Ingresa ingresos para calcular viabilidad.
+                </div>
+            </div>
+
+            <!-- Horizontal Metrics Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-5">
+                
+                <!-- KPI 1: Cupo Disponible -->
+                <div class="bg-slate-900 text-white rounded-xl p-4 flex flex-col justify-between min-h-[96px] border border-slate-800">
+                    <span class="text-[9px] uppercase tracking-widest text-slate-400 font-extrabold block">Cupo Disponible Cuota</span>
+                    <div class="text-2xl font-black text-viventa-pink" id="live-available-cuota">$0</div>
+                    <span class="text-[9px] text-slate-400 font-medium">Capacidad de pago de cuota</span>
+                </div>
+
+                <!-- KPI 2: Ingresos Consolidados -->
+                <div class="bg-slate-50 border border-viventa-gray rounded-xl p-4 flex flex-col justify-between min-h-[96px]">
+                    <span class="text-[9px] uppercase tracking-widest text-viventa-grayb font-extrabold block">Ingresos Consolidados</span>
+                    <div class="text-xl font-extrabold text-viventa-black" id="live-total-income">$0</div>
+                    <span class="text-[9px] text-viventa-grayb font-medium">Suma de solicitantes</span>
+                </div>
+
+                <!-- KPI 3: Tope Máximo Legal (40% de ingresos) -->
+                <div class="bg-slate-50 border border-viventa-gray rounded-xl p-4 flex flex-col justify-between min-h-[96px]">
+                    <span class="text-[9px] uppercase tracking-widest text-viventa-grayb font-extrabold block">Tope Máximo Legal (40%)</span>
+                    <div class="text-xl font-extrabold text-viventa-black" id="live-max-limit">$0</div>
+                    <span class="text-[9px] text-viventa-grayb font-medium">Límite por Ley 546/99</span>
+                </div>
+
+                <!-- KPI 4: Egresos Registrados -->
+                <div class="bg-slate-50 border border-viventa-gray rounded-xl p-4 flex flex-col justify-between min-h-[96px]">
+                    <span class="text-[9px] uppercase tracking-widest text-viventa-grayb font-extrabold block">Egresos Registrados</span>
+                    <div class="text-xl font-extrabold text-viventa-magenta" id="live-total-outlays">$0</div>
+                    <span class="text-[9px] text-viventa-grayb font-medium">Obligaciones actuales</span>
+                </div>
+
+            </div>
+
+            <!-- Visual Bar Gauge representing the available legal limit of 40% -->
+            <div class="bg-slate-50 border border-viventa-gray rounded-xl p-3 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div class="flex items-center gap-2 shrink-0">
+                    <i data-lucide="percent" class="w-4 h-4 text-viventa-magenta"></i>
+                    <span class="text-xs font-bold text-viventa-black uppercase tracking-wider">Porcentaje disponible del cupo legal:</span>
+                    <span id="live-percent-label" class="text-xs font-extrabold text-viventa-magenta">0% Disponible</span>
+                </div>
+                <div class="w-full bg-slate-200 h-2.5 rounded-full overflow-hidden flex">
+                    <div id="live-bar-debts" class="h-full bg-viventa-magenta transition-all duration-300 w-0" title="Consumido por egresos"></div>
+                    <div id="live-bar-available" class="h-full bg-viventa-mist transition-all duration-300 w-full" title="Disponible para cuota de vivienda"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MAIN CONTAINER FOR INPUT FORMS (Width spans full 100%) -->
+        <div class="bg-white rounded-3xl border border-viventa-gray shadow-sm p-6 md:p-8">
+            
+            <form id="simulatorForm" class="space-y-8" onsubmit="event.preventDefault();">
+                
+                <!-- STEP 1: DATOS PERSONALES Y RADICACIÓN -->
+                <div id="step-content-1" class="step-content space-y-6">
+                    <div class="border-b border-viventa-gray pb-3">
+                        <h3 class="text-base font-extrabold text-viventa-black flex items-center gap-2 uppercase tracking-wider">
+                            <i data-lucide="user" class="w-4.5 h-4.5 text-viventa-magenta"></i>
+                            1. Identificación y Radicación Exterior (Principal)
+                        </h3>
+                    </div>
+
+                    <!-- Main Grid standard h-[52px] inputs -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5 items-end">
+                        <!-- Primer Nombre -->
+                        <div class="flex flex-col justify-end w-full">
+                            <label class="block text-xs font-bold text-viventa-black uppercase tracking-wider mb-2">Primer Nombre *</label>
+                            <input type="text" id="p1_primer_nombre" required class="w-full h-[52px] px-4 rounded-xl border border-viventa-grayb/20 focus:ring-2 focus:ring-viventa-magenta/20 focus:border-viventa-magenta outline-none bg-viventa-gray/45 transition-all text-sm font-semibold text-viventa-black" placeholder="Ej. Juan">
+                        </div>
+                        <!-- Segundo Nombre -->
+                        <div class="flex flex-col justify-end w-full">
+                            <label class="block text-xs font-bold text-viventa-black uppercase tracking-wider mb-2">Segundo Nombre</label>
+                            <input type="text" id="p1_segundo_nombre" class="w-full h-[52px] px-4 rounded-xl border border-viventa-grayb/20 focus:ring-2 focus:ring-viventa-magenta/20 focus:border-viventa-magenta outline-none bg-viventa-gray/45 transition-all text-sm font-semibold text-viventa-black" placeholder="Ej. Carlos (Opcional)">
+                        </div>
+                        <!-- Apellidos -->
+                        <div class="flex flex-col justify-end w-full">
+                            <label class="block text-xs font-bold text-viventa-black uppercase tracking-wider mb-2">Apellidos Completos *</label>
+                            <input type="text" id="p1_apellidos" required class="w-full h-[52px] px-4 rounded-xl border border-viventa-grayb/20 focus:ring-2 focus:ring-viventa-magenta/20 focus:border-viventa-magenta outline-none bg-viventa-gray/45 transition-all text-sm font-semibold text-viventa-black" placeholder="Ej. Pérez">
+                        </div>
+                        <!-- CC -->
+                        <div class="flex flex-col justify-end w-full">
+                            <label class="block text-xs font-bold text-viventa-black uppercase tracking-wider mb-2">N° Documento (CC) *</label>
+                            <input type="text" id="p1_cc" required class="w-full h-[52px] px-4 rounded-xl border border-viventa-grayb/20 focus:ring-2 focus:ring-viventa-magenta/20 focus:border-viventa-magenta outline-none bg-viventa-gray/45 transition-all text-sm font-semibold text-viventa-black" placeholder="Ej. 10234567">
+                        </div>
+                        <!-- Fecha de Nacimiento -->
+                        <div class="flex flex-col justify-end w-full">
+                            <label class="block text-xs font-bold text-viventa-black uppercase tracking-wider mb-2">Fecha de Nacimiento *</label>
+                            <input type="date" id="p1_fecha_nacimiento" required class="w-full h-[52px] px-4 rounded-xl border border-viventa-grayb/20 focus:ring-2 focus:ring-viventa-magenta/20 focus:border-viventa-magenta outline-none bg-viventa-gray/45 transition-all text-sm font-semibold text-viventa-black">
+                        </div>
+                        <!-- Actividad Económica -->
+                        <div class="flex flex-col justify-end w-full">
+                            <label class="block text-xs font-bold text-viventa-black uppercase tracking-wider mb-2">Actividad Económica *</label>
+                            <select id="p1_actividad" required class="w-full h-[52px] px-4 rounded-xl border border-viventa-grayb/20 focus:ring-2 focus:ring-viventa-magenta/20 focus:border-viventa-magenta outline-none bg-white transition-all text-sm font-semibold text-viventa-black">
+                                <option value="" disabled selected>Selecciona actividad...</option>
+                                <option value="empleado">Empleado</option>
+                                <option value="independiente">Independiente</option>
+                                <option value="pensionado">Pensionado</option>
+                            </select>
+                        </div>
+                        <!-- Ingresos Mensuales -->
+                        <div class="flex flex-col justify-end w-full">
+                            <label class="block text-xs font-bold text-viventa-black uppercase tracking-wider mb-2">Ingresos Mensuales Certificables (COP) *</label>
+                            <div class="relative w-full h-[52px]">
+                                <span class="absolute left-4 top-1/2 -translate-y-1/2 text-viventa-grayb font-bold text-sm">$</span>
+                                <input type="number" id="p1_ingresos" required min="100000" class="w-full h-full pl-8 pr-4 rounded-xl border border-viventa-grayb/20 focus:ring-2 focus:ring-viventa-magenta/20 focus:border-viventa-magenta outline-none bg-viventa-gray/45 transition-all text-sm font-semibold text-viventa-black" placeholder="Ej. 5000000" oninput="updateLiveDashboard()">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Radicación exterior metrics in step 1 -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5 items-end border-t border-viventa-gray pt-4">
+                        <div class="flex flex-col justify-end w-full">
+                            <label class="block text-xs font-bold text-viventa-black uppercase tracking-wider mb-2">País de Radicación *</label>
+                            <select id="p1_pais" required class="w-full h-[52px] px-4 rounded-xl border border-viventa-grayb/20 focus:ring-2 focus:ring-viventa-magenta/20 focus:border-viventa-magenta outline-none bg-white transition-all text-sm font-semibold text-viventa-black">
+                                <option value="" disabled selected>Selecciona país...</option>
+                                <option value="EEUU">EEUU</option>
+                                <option value="Chile">Chile</option>
+                                <option value="España">España</option>
+                                <option value="Otro">Otro</option>
+                            </select>
+                        </div>
+                        <div class="flex flex-col justify-end w-full">
+                            <label class="block text-xs font-bold text-viventa-black uppercase tracking-wider mb-2">Score de Crédito Extranjero *</label>
+                            <input type="number" id="p1_score" required min="300" max="900" class="w-full h-[52px] px-4 rounded-xl border border-viventa-grayb/20 focus:ring-2 focus:ring-viventa-magenta/20 focus:border-viventa-magenta outline-none bg-viventa-gray/45 transition-all text-sm font-semibold text-viventa-black" placeholder="Ej. 720">
+                        </div>
+                        <div class="flex flex-col justify-end w-full">
+                            <label class="block text-xs font-bold text-viventa-black uppercase tracking-wider mb-2">Fecha Ingreso al País Exterior *</label>
+                            <input type="date" id="p1_fecha_ingreso" required class="w-full h-[52px] px-4 rounded-xl border border-viventa-grayb/20 focus:ring-2 focus:ring-viventa-magenta/20 focus:border-viventa-magenta outline-none bg-viventa-gray/45 transition-all text-sm font-semibold text-viventa-black">
+                        </div>
+                        <div class="flex flex-col justify-end w-full">
+                            <label class="block text-xs font-bold text-viventa-black uppercase tracking-wider mb-2">Estatus Migratorio *</label>
+                            <select id="p1_estatus_migratorio" required class="w-full h-[52px] px-4 rounded-xl border border-viventa-grayb/20 focus:ring-2 focus:ring-viventa-magenta/20 focus:border-viventa-magenta outline-none bg-white transition-all text-sm font-semibold text-viventa-black">
+                                <option value="" disabled selected>Selecciona estatus...</option>
+                                <option value="residencia">Residencia permanente / Ciudadano</option>
+                                <option value="permiso_trabajo">Permiso de Trabajo</option>
+                                <option value="licencia_temporal">Estatus Temporal</option>
+                                <option value="sin_estatus">Sin Estatus Regulado</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- COTITULAR SELECTOR -->
+                    <div class="bg-viventa-pink/10 border border-viventa-pink/30 rounded-xl p-4 flex flex-col sm:flex-row justify-between items-center gap-3">
+                        <div class="flex items-center gap-2.5">
+                            <div class="w-8 h-8 rounded-lg bg-white text-viventa-magenta flex items-center justify-center shadow-sm">
+                                <i data-lucide="users" class="w-4 h-4"></i>
+                            </div>
+                            <p class="text-xs font-bold text-viventa-black">¿La postulación del crédito requiere un Segundo Solicitante (Co-Titular)?</p>
+                        </div>
+                        <div class="flex gap-2 h-[42px] min-w-[200px]">
+                            <label class="flex-1">
+                                <input type="radio" name="requiere_cotitular" value="no" checked class="peer sr-only" onchange="toggleCotitularNode(false)">
+                                <div class="h-full flex items-center justify-center rounded-lg border border-viventa-grayb/20 bg-white cursor-pointer peer-checked:border-viventa-magenta peer-checked:bg-viventa-pink/20 transition-all font-bold text-[11px] text-viventa-black">No</div>
+                            </label>
+                            <label class="flex-1">
+                                <input type="radio" name="requiere_cotitular" value="si" class="peer sr-only" onchange="toggleCotitularNode(true)">
+                                <div class="h-full flex items-center justify-center rounded-lg border border-viventa-grayb/20 bg-white cursor-pointer peer-checked:border-viventa-magenta peer-checked:bg-viventa-pink/20 transition-all font-bold text-[11px] text-viventa-black">Sí</div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end pt-2">
+                        <button type="button" onclick="validateAndGoToStep(2)" class="px-5 h-[52px] bg-viventa-magenta hover:bg-[#c20054] text-white font-extrabold rounded-xl transition-all text-sm flex items-center gap-2 shadow-sm">
+                            Siguiente Paso
+                            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- STEP 2: COMPROMISOS Y CUMPLIMIENTO -->
+                <div id="step-content-2" class="step-content hidden space-y-6">
+                    <div class="border-b border-viventa-gray pb-3">
+                        <h3 class="text-base font-extrabold text-viventa-black flex items-center gap-2 uppercase tracking-wider">
+                            <i data-lucide="wallet" class="w-4.5 h-4.5 text-viventa-magenta"></i>
+                            2. Compromisos Financieros y Buró de Crédito
+                        </h3>
+                    </div>
+
+                    <!-- Egresos Section -->
+                    <div class="bg-slate-50 p-5 rounded-2xl border border-viventa-gray">
+                        <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider mb-4">Detalle de Deudas y Compromisos de Pago Actuales</h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 items-end">
+                            <div class="flex flex-col justify-end">
+                                <label class="block text-[10px] font-bold text-viventa-black uppercase tracking-wider mb-2">N° Tarjetas de Crédito *</label>
+                                <input type="number" id="p1_num_tarjetas" required min="0" class="w-full h-[52px] px-4 rounded-xl border border-viventa-grayb/20 focus:ring-2 focus:ring-viventa-magenta/20 focus:border-viventa-magenta outline-none bg-white text-sm font-semibold text-viventa-black" placeholder="0" oninput="updateLiveDashboard()">
+                            </div>
+                            <div class="flex flex-col justify-end">
+                                <label class="block text-[10px] font-bold text-viventa-black uppercase tracking-wider mb-2">Cupo Total Tarjetas (COP) *</label>
+                                <input type="number" id="p1_cupo_tarjetas" required min="0" class="w-full h-[52px] px-4 rounded-xl border border-viventa-grayb/20 focus:ring-2 focus:ring-viventa-magenta/20 focus:border-viventa-magenta outline-none bg-white text-sm font-semibold text-viventa-black" placeholder="0" oninput="updateLiveDashboard()">
+                            </div>
+                            <div class="flex flex-col justify-end">
+                                <label class="block text-[10px] font-bold text-viventa-black uppercase tracking-wider mb-2">Cuotas Tarjetas (Mes) *</label>
+                                <input type="number" id="p1_cuota_tarjetas" required min="0" class="w-full h-[52px] px-4 rounded-xl border border-viventa-grayb/20 focus:ring-2 focus:ring-viventa-magenta/20 focus:border-viventa-magenta outline-none bg-white text-sm font-semibold text-viventa-black" placeholder="0" oninput="updateLiveDashboard()">
+                            </div>
+                            <div class="flex flex-col justify-end">
+                                <label class="block text-[10px] font-bold text-viventa-black uppercase tracking-wider mb-2">Cuota Otros Créditos *</label>
+                                <input type="number" id="p1_otros_creditos" required min="0" class="w-full h-[52px] px-4 rounded-xl border border-viventa-grayb/20 focus:ring-2 focus:ring-viventa-magenta/20 focus:border-viventa-magenta outline-none bg-white text-sm font-semibold text-viventa-black" placeholder="0" oninput="updateLiveDashboard()">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Historial Cumplimiento (Simétrico) -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 items-end border border-slate-200/60 p-5 rounded-2xl bg-white">
+                        <!-- Col 1: Moras en Colombia -->
+                        <div class="flex flex-col justify-end h-full">
+                            <label class="block text-[10px] font-bold text-viventa-black uppercase tracking-wider mb-2">¿Presenta moras en Colombia? *</label>
+                            <div class="flex gap-2 h-[52px] w-full">
+                                <label class="flex-1 h-full">
+                                    <input type="radio" name="p1_mora_colombia" value="no" checked class="peer sr-only" onchange="toggleMoraSector(false)">
+                                    <div class="h-full flex items-center justify-center rounded-xl border border-viventa-grayb/20 bg-white cursor-pointer peer-checked:border-viventa-magenta peer-checked:bg-viventa-pink/20 transition-all font-bold text-xs text-viventa-black text-center">
+                                        No
+                                    </div>
+                                </label>
+                                <label class="flex-1 h-full">
+                                    <input type="radio" name="p1_mora_colombia" value="si" class="peer sr-only" onchange="toggleMoraSector(true)">
+                                    <div class="h-full flex items-center justify-center rounded-xl border border-viventa-grayb/20 bg-white cursor-pointer peer-checked:border-viventa-magenta peer-checked:bg-viventa-pink/20 transition-all font-bold text-xs text-viventa-black text-center">
+                                        Sí
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Col 2: Sector de la Mora (Espacio Definido Permanente) -->
+                        <div id="p1_mora_sector_container" class="opacity-40 select-none pointer-events-none transition-all duration-300 flex flex-col justify-end h-full">
+                            <label class="block text-[10px] font-bold text-viventa-black uppercase tracking-wider mb-2">
+                                ¿Sector de la Mora? 
+                                <span id="mora_sector_req_label" class="text-viventa-grayb font-medium">(No aplica)</span>
+                            </label>
+                            <select id="p1_mora_sector" disabled class="w-full h-[52px] px-4 rounded-xl border border-viventa-grayb/20 focus:ring-2 focus:ring-viventa-magenta/20 focus:border-viventa-magenta outline-none bg-white transition-all text-xs font-semibold text-viventa-black">
+                                <option value="" disabled selected>Selecciona sector...</option>
+                                <option value="real">Sector Real (Celular/Servicios)</option>
+                                <option value="financiero">Sector Financiero (Bancos)</option>
+                            </select>
+                        </div>
+
+                        <!-- Col 3: Collections en el Exterior -->
+                        <div class="flex flex-col justify-end h-full">
+                            <label class="block text-[10px] font-bold text-viventa-black uppercase tracking-wider mb-2">¿Tiene Collections en exterior? *</label>
+                            <div class="flex gap-2 h-[52px] w-full">
+                                <label class="flex-1 h-full">
+                                    <input type="radio" name="p1_mora_exterior" value="no" checked class="peer sr-only">
+                                    <div class="h-full flex items-center justify-center rounded-xl border border-viventa-grayb/20 bg-white cursor-pointer peer-checked:border-viventa-magenta peer-checked:bg-viventa-pink/20 transition-all font-bold text-xs text-viventa-black text-center">
+                                        No
+                                    </div>
+                                </label>
+                                <label class="flex-1 h-full">
+                                    <input type="radio" name="p1_mora_exterior" value="si" class="peer sr-only">
+                                    <div class="h-full flex items-center justify-center rounded-xl border border-viventa-grayb/20 bg-white cursor-pointer peer-checked:border-viventa-magenta peer-checked:bg-viventa-pink/20 transition-all font-bold text-xs text-viventa-black text-center">
+                                        Sí
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Autorización centrales (Obligatoria para continuar) -->
+                    <div class="bg-slate-100 p-4 rounded-xl border border-slate-200">
+                        <label class="block text-xs font-bold text-viventa-black uppercase tracking-wider mb-2">Autorización de Consulta de Centrales de Datos *</label>
+                        <div class="flex gap-3 h-[52px] max-w-sm">
+                            <label class="flex-1 h-full">
+                                <input type="radio" name="p1_autorizacion_centrales" value="si" required class="peer sr-only">
+                                <div class="h-full flex items-center justify-center rounded-xl border border-viventa-grayb/20 bg-white cursor-pointer peer-checked:border-viventa-magenta peer-checked:bg-viventa-pink/20 transition-all font-bold text-xs text-viventa-black text-center">
+                                    Sí, autoriza
+                                </div>
+                            </label>
+                            <label class="flex-1 h-full">
+                                <input type="radio" name="p1_autorizacion_centrales" value="no" class="peer sr-only">
+                                <div class="h-full flex items-center justify-center rounded-xl border border-viventa-grayb/20 bg-white cursor-pointer peer-checked:border-viventa-magenta peer-checked:bg-viventa-pink/20 transition-all font-bold text-xs text-viventa-black text-center">
+                                    No autoriza
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- CONTROLS -->
+                    <div class="flex justify-between pt-4">
+                        <button type="button" onclick="goToStep(1)" class="px-5 h-[52px] border border-viventa-grayb/20 text-viventa-grayb font-bold rounded-xl hover:bg-viventa-gray transition-all text-sm flex items-center gap-2">
+                            <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                            Atrás
+                        </button>
+                        <button type="button" onclick="validateAndGoToStep(3)" class="px-6 h-[52px] bg-viventa-magenta hover:bg-[#c20054] text-white font-extrabold rounded-xl shadow-lg transition-all text-sm flex items-center gap-2">
+                            Siguiente Paso
+                            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- STEP 3: CO-TITULAR (CONDICIONAL) -->
+                <div id="step-content-3" class="step-content hidden space-y-6">
+                    <div class="border-b border-viventa-gray pb-3">
+                        <h3 class="text-base font-extrabold text-viventa-black flex items-center gap-2 uppercase tracking-wider">
+                            <i data-lucide="user-plus" class="w-4.5 h-4.5 text-viventa-magenta"></i>
+                            3. Información Financiera del Co-Titular (Segundo Solicitante)
+                        </h3>
+                    </div>
+
+                    <!-- Co-titular Fields with h-[52px] standard -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5 items-end">
+                        <!-- Primer Nombre -->
+                        <div class="flex flex-col justify-end w-full">
+                            <label class="block text-xs font-bold text-viventa-black uppercase tracking-wider mb-2">Primer Nombre Co-Titular *</label>
+                            <input type="text" id="p2_primer_nombre" class="w-full h-[52px] px-4 rounded-xl border border-viventa-grayb/20 focus:ring-2 focus:ring-viventa-magenta/20 focus:border-viventa-magenta outline-none bg-viventa-gray/45 transition-all text-sm font-semibold text-viventa-black" placeholder="Ej. María">
+                        </div>
+                        <!-- Apellidos -->
+                        <div class="flex flex-col justify-end w-full">
+                            <label class="block text-xs font-bold text-viventa-black uppercase tracking-wider mb-2">Apellidos Co-Titular *</label>
+                            <input type="text" id="p2_apellidos" class="w-full h-[52px] px-4 rounded-xl border border-viventa-grayb/20 focus:ring-2 focus:ring-viventa-magenta/20 focus:border-viventa-magenta outline-none bg-viventa-gray/45 transition-all text-sm font-semibold text-viventa-black" placeholder="Ej. Castro">
+                        </div>
+                        <!-- CC -->
+                        <div class="flex flex-col justify-end w-full">
+                            <label class="block text-xs font-bold text-viventa-black uppercase tracking-wider mb-2">N° Documento (CC) *</label>
+                            <input type="text" id="p2_cc" class="w-full h-[52px] px-4 rounded-xl border border-viventa-grayb/20 focus:ring-2 focus:ring-viventa-magenta/20 focus:border-viventa-magenta outline-none bg-viventa-gray/45 transition-all text-sm font-semibold text-viventa-black" placeholder="Ej. 10456789">
+                        </div>
+                        <!-- Actividad Económica -->
+                        <div class="flex flex-col justify-end w-full">
+                            <label class="block text-xs font-bold text-viventa-black uppercase tracking-wider mb-2">Actividad Económica *</label>
+                            <select id="p2_actividad" class="w-full h-[52px] px-4 rounded-xl border border-viventa-grayb/20 focus:ring-2 focus:ring-viventa-magenta/20 focus:border-viventa-magenta outline-none bg-white transition-all text-sm font-semibold text-viventa-black">
+                                <option value="" disabled selected>Selecciona actividad...</option>
+                                <option value="empleado">Empleado</option>
+                                <option value="independiente">Independiente</option>
+                                <option value="pensionado">Pensionado</option>
+                            </select>
+                        </div>
+                        <!-- Ingresos Co-Titular -->
+                        <div class="flex flex-col justify-end w-full">
+                            <label class="block text-xs font-bold text-viventa-black uppercase tracking-wider mb-2">Ingresos Co-Titular (COP) *</label>
+                            <div class="relative w-full h-[52px]">
+                                <span class="absolute left-4 top-1/2 -translate-y-1/2 text-viventa-grayb font-bold text-sm">$</span>
+                                <input type="number" id="p2_ingresos" min="0" class="w-full h-full pl-8 pr-4 rounded-xl border border-viventa-grayb/20 focus:ring-2 focus:ring-viventa-magenta/20 focus:border-viventa-magenta outline-none bg-viventa-gray/45 transition-all text-sm font-semibold text-viventa-black" placeholder="0" oninput="updateLiveDashboard()">
+                            </div>
+                        </div>
+                        <!-- Egresos Co-titular -->
+                        <div class="flex flex-col justify-end w-full">
+                            <label class="block text-xs font-bold text-viventa-black uppercase tracking-wider mb-2">Egresos Mensuales Co-Titular (COP) *</label>
+                            <div class="relative w-full h-[52px]">
+                                <span class="absolute left-4 top-1/2 -translate-y-1/2 text-viventa-grayb font-bold text-sm">$</span>
+                                <input type="number" id="p2_egresos" min="0" class="w-full h-full pl-8 pr-4 rounded-xl border border-viventa-grayb/20 focus:ring-2 focus:ring-viventa-magenta/20 focus:border-viventa-magenta outline-none bg-viventa-gray/45 transition-all text-sm font-semibold text-viventa-black" placeholder="0" oninput="updateLiveDashboard()">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- EXTRANJERO Y LEGALES DEL COTITULAR -->
+                    <div class="bg-viventa-gray/40 border border-viventa-gray rounded-2xl p-5 space-y-4">
+                        <h4 class="text-xs font-bold text-viventa-black uppercase tracking-wider">Estadísticas Extranjeras Co-Titular</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-end">
+                            <!-- País Residencia -->
+                            <div class="flex flex-col justify-end w-full">
+                                <label class="block text-xs font-bold text-viventa-grayb mb-2">País Residencia Co-Titular *</label>
+                                <select id="p2_pais" class="w-full h-[52px] px-4 rounded-xl border border-viventa-grayb/20 bg-white text-sm font-semibold text-viventa-black outline-none">
+                                    <option value="" disabled selected>Selecciona país...</option>
+                                    <option value="EEUU">EEUU</option>
+                                    <option value="Chile">Chile</option>
+                                    <option value="España">España</option>
+                                    <option value="Otro">Otro</option>
+                                </select>
+                            </div>
+                            <!-- Score Extranjero -->
+                            <div class="flex flex-col justify-end w-full">
+                                <label class="block text-xs font-bold text-viventa-grayb mb-2">Score de Crédito Co-Titular *</label>
+                                <input type="number" id="p2_score" min="300" max="900" class="w-full h-[52px] px-4 rounded-xl border border-viventa-grayb/20 text-sm font-semibold text-viventa-black outline-none bg-white" placeholder="Ej. 680">
+                            </div>
+                            <!-- Fecha de ingreso -->
+                            <div class="flex flex-col justify-end w-full">
+                                <label class="block text-xs font-bold text-viventa-grayb mb-2">Fecha Ingreso Co-Titular *</label>
+                                <input type="date" id="p2_fecha_ingreso" class="w-full h-[52px] px-4 rounded-xl border border-viventa-grayb/20 text-sm font-semibold text-viventa-black outline-none bg-white">
+                            </div>
+                            <!-- Estatus Migratorio -->
+                            <div class="flex flex-col justify-end w-full">
+                                <label class="block text-xs font-bold text-viventa-grayb mb-2">Estatus Migratorio Co-Titular *</label>
+                                <select id="p2_estatus" class="w-full h-[52px] px-4 rounded-xl border border-viventa-grayb/20 bg-white text-sm font-semibold text-viventa-black outline-none">
+                                    <option value="" disabled selected>Selecciona estatus...</option>
+                                    <option value="residencia">Residencia</option>
+                                    <option value="permiso_trabajo">Permiso de Trabajo</option>
+                                    <option value="licencia_temporal">Temporal</option>
+                                    <option value="sin_estatus">Sin Estatus</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CONTROLS -->
+                    <div class="flex justify-between pt-4">
+                        <button type="button" onclick="goToStep(2)" class="px-5 h-[52px] border border-viventa-grayb/20 text-viventa-grayb font-bold rounded-xl hover:bg-viventa-gray transition-all text-sm flex items-center gap-2">
+                            <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                            Atrás
+                        </button>
+                        <button type="button" onclick="submitSimulation()" class="px-6 h-[52px] bg-viventa-magenta hover:bg-[#c20054] text-white font-extrabold rounded-xl shadow-lg transition-all text-sm flex items-center gap-2">
+                            <i data-lucide="cpu" class="w-4 h-4"></i>
+                            Procesar Viabilidad
+                        </button>
+                    </div>
+                </div>
+
+            </form>
+            
+            <!-- STEP 4: RESULTADO DE SIMULACIÓN -->
+            <div id="step-content-4" class="step-content hidden space-y-8 animate-in fade-in duration-300">
+                <!-- DINAMICALLY FILLED RESULT AREA -->
+                <div id="result-payload"></div>
+                
+                <!-- RE-SIMULATE ACTION -->
+                <div class="flex justify-center pt-4 border-t border-viventa-gray">
+                    <button type="button" onclick="resetSimulator()" class="px-5 h-[52px] border border-viventa-grayb/20 text-viventa-grayb font-bold rounded-xl hover:bg-viventa-gray transition-all text-sm flex items-center gap-2">
+                        <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+                        Simular Nueva Opción
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- CONTEXT CARD FOR AGENT REFERENCE -->
+        <div class="bg-viventa-black text-slate-300 rounded-3xl p-5 border border-slate-800 flex flex-col md:flex-row items-center gap-5">
+            <div class="w-12 h-12 rounded-full bg-viventa-magenta flex-shrink-0 flex items-center justify-center text-white text-xl shadow-md">
+                🦉
+            </div>
+            <div class="space-y-1">
+                <h4 class="font-extrabold text-viventa-yellow text-xs uppercase tracking-wider">Directiva y Soporte Legal del Canal Viventa</h4>
+                <p class="text-xs text-slate-300 leading-relaxed font-medium">
+                    La Ley de Vivienda en Colombia (Ley 546 de 1999) determina un control riguroso de amortización: la cuota hipotecaria mensual consolidada no puede representar más del 40% de los ingresos demostrados de la unidad familiar. Ante casos rechazados por baja capacidad o mora, emita la carta de fortalecimiento adjunta para fidelizar la futura radicación.
+                </p>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-viventa-gray bg-white py-4 mt-8">
+        <div class="max-w-6xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-viventa-grayb font-semibold">
+            <p>© 2026 Viventa - Plataforma de Simulación y Análisis de Viabilidad Crediticia.</p>
+            <div class="flex gap-4">
+                <a href="#" class="hover:text-viventa-magenta transition-colors">Manual de Procedimiento</a>
+                <a href="#" class="hover:text-viventa-magenta transition-colors">Políticas de Scoring</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ALERT MODALS -->
+    <div id="custom-modal" class="fixed inset-0 bg-viventa-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-viventa-gray animate-in fade-in zoom-in duration-300">
+            <div class="flex items-center gap-3 text-viventa-magenta mb-4">
+                <div class="w-10 h-10 rounded-full bg-viventa-pink/30 flex items-center justify-center">
+                    <i data-lucide="info" class="w-5 h-5 text-viventa-magenta"></i>
+                </div>
+                <h4 class="text-base font-extrabold text-viventa-black" id="modal-title">Mensaje de Control</h4>
+            </div>
+            <p class="text-viventa-grayb text-xs leading-relaxed mb-6 font-semibold" id="modal-body">Mensaje predeterminado.</p>
+            <div class="flex justify-end">
+                <button onclick="closeModal()" class="px-5 py-2.5 bg-viventa-black hover:bg-slate-800 text-white rounded-xl text-xs font-bold transition-all">
+                    Entendido
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CODE SCRIPT LOGIC -->
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // Application State
+        let currentStep = 1;
+        let requiresCotitular = false;
+
+        // Dom Elements references
+        const stepNodeCotitular = document.getElementById('step-node-cotitular');
+        const stepNodeFinal = document.getElementById('step-node-final');
+        const lineStepCotitular = document.getElementById('line-step-cotitular');
+
+        // Functions to handle Custom Modals instead of standard alert()
+        function showModal(title, body) {
+            document.getElementById('modal-title').textContent = title;
+            document.getElementById('modal-body').textContent = body;
+            document.getElementById('custom-modal').classList.remove('hidden');
+        }
+
+        // Close Custom modal Window
+        function closeModal() {
+            document.getElementById('custom-modal').classList.add('hidden');
+        }
+
+        // Realtime Visual Agent Dashboard Engine (CORRECTED MATH: compare 40% cap against disposable)
+        function updateLiveDashboard() {
+            // Solicitante 1
+            const p1_ingresos = parseFloat(document.getElementById('p1_ingresos').value) || 0;
+            const p1_cuota_tarjetas = parseFloat(document.getElementById('p1_cuota_tarjetas').value) || 0;
+            const p1_otros_creditos = parseFloat(document.getElementById('p1_otros_creditos').value) || 0;
+            
+            // Solicitante 2 (Co-titular) if active
+            let p2_ingresos = 0;
+            let p2_egresos = 0;
+            if (requiresCotitular) {
+                p2_ingresos = parseFloat(document.getElementById('p2_ingresos').value) || 0;
+                p2_egresos = parseFloat(document.getElementById('p2_egresos').value) || 0;
+            }
+
+            // Calculations
+            const totalIncome = p1_ingresos + p2_ingresos;
+            const totalOutlays = p1_cuota_tarjetas + p1_otros_creditos + p2_egresos;
+            
+            // Correct logic following user specifications
+            const maxCuotaLimit = totalIncome * 0.40; // 40% Colombian Housing Law limit
+            const disposableIncome = Math.max(0, totalIncome - totalOutlays); // Real disposable cash flow
+
+            // Real capacity of new cuota is the minimum between the legal cap and the remaining cash flow
+            const availableCuota = Math.max(0, Math.min(maxCuotaLimit, disposableIncome));
+
+            // Percentage of the legal capacity available for the agent
+            let availablePercent = 0;
+            if (maxCuotaLimit > 0) {
+                availablePercent = Math.min(100, Math.round((availableCuota / maxCuotaLimit) * 100));
+            }
+            const consumedPercent = 100 - availablePercent;
+
+            // Formatters
+            const copFormatter = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 });
+
+            // DOM Updates
+            document.getElementById('live-total-income').textContent = copFormatter.format(totalIncome);
+            document.getElementById('live-max-limit').textContent = copFormatter.format(maxCuotaLimit);
+            document.getElementById('live-total-outlays').textContent = copFormatter.format(totalOutlays);
+            document.getElementById('live-available-cuota').textContent = copFormatter.format(availableCuota);
+            document.getElementById('live-percent-label').textContent = `${availablePercent}% Disponible`;
+
+            // Bar visual adjustment
+            const debtBar = document.getElementById('live-bar-debts');
+            const availableBar = document.getElementById('live-bar-available');
+            debtBar.style.width = `${consumedPercent}%`;
+            availableBar.style.width = `${availablePercent}%`;
+
+            // Semaphore logic (Visual indicators based on capacity percent)
+            const sem = document.getElementById('live-semaphore');
+            if (totalIncome === 0) {
+                sem.className = "px-3 py-1 rounded-full text-xs font-bold bg-viventa-gray text-viventa-grayb transition-all duration-300";
+                sem.textContent = "Ingresa ingresos para calcular viabilidad.";
+            } else {
+                if (availablePercent >= 80) {
+                    sem.className = "px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-200 transition-all duration-300";
+                    sem.textContent = "✓ VIABILIDAD DE CUOTA ÓPTIMA";
+                } else if (availablePercent > 30 && availablePercent < 80) {
+                    sem.className = "px-3 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-800 border border-amber-200 transition-all duration-300";
+                    sem.textContent = "⚠️ CAPACIDAD REDUCIDA / RESTRINGIDA";
+                } else {
+                    sem.className = "px-3 py-1 rounded-full text-xs font-bold bg-rose-100 text-rose-800 border border-rose-200 transition-all duration-300";
+                    sem.textContent = "❌ SIN CAPACIDAD DISPONIBLE";
+                }
+            }
+        }
+
+        // Toggle Mora Sector Select - stable and doesn't shift heights
+        function toggleMoraSector(show) {
+            const container = document.getElementById('p1_mora_sector_container');
+            const selectField = document.getElementById('p1_mora_sector');
+            const reqLabel = document.getElementById('mora_sector_req_label');
+            
+            if (show) {
+                container.classList.remove('opacity-40', 'select-none', 'pointer-events-none');
+                selectField.disabled = false;
+                selectField.required = true;
+                reqLabel.textContent = "*";
+                reqLabel.className = "text-viventa-magenta font-bold";
+            } else {
+                container.classList.add('opacity-40', 'select-none', 'pointer-events-none');
+                selectField.disabled = true;
+                selectField.required = false;
+                selectField.value = ""; // Reset
+                reqLabel.textContent = "(No aplica)";
+                reqLabel.className = "text-viventa-grayb font-semibold";
+                selectField.classList.remove('border-rose-400', 'bg-rose-50/20');
+            }
+        }
+
+        // Toggle Co-titular layout dynamically (Fixed elements selectors)
+        function toggleCotitularNode(isActive) {
+            requiresCotitular = isActive;
+            if (isActive) {
+                stepNodeCotitular.style.display = 'flex';
+                lineStepCotitular.style.display = 'block';
+                // Adjust step node numbers for visual consistency
+                const cotitularCircle = stepNodeCotitular.querySelector('.step-circle');
+                if (cotitularCircle) cotitularCircle.textContent = '3';
+                const finalCircle = stepNodeFinal.querySelector('.step-circle');
+                if (finalCircle) finalCircle.textContent = '4';
+                setFieldsRequired('step-content-3', true);
+            } else {
+                stepNodeCotitular.style.display = 'none';
+                lineStepCotitular.style.display = 'none';
+                const finalCircle = stepNodeFinal.querySelector('.step-circle');
+                if (finalCircle) finalCircle.textContent = '3';
+                setFieldsRequired('step-content-3', false);
+            }
+            updateLiveDashboard();
+            goToStep(currentStep); // Refresh step nodes classes
+        }
+
+        function setFieldsRequired(containerId, isRequired) {
+            const container = document.getElementById(containerId);
+            const inputs = container.querySelectorAll('input, select');
+            inputs.forEach(input => {
+                if (input.id !== 'p2_segundo_nombre') { // Except optional second name
+                    input.required = isRequired;
+                }
+            });
+        }
+
+        // Progressive Navigation Logic
+        function goToStep(stepId) {
+            currentStep = stepId;
+            
+            // Hide all contents
+            document.querySelectorAll('.step-content').forEach(content => content.classList.add('hidden'));
+            
+            // Show current content
+            document.getElementById(`step-content-${stepId}`).classList.remove('hidden');
+
+            // Determine visual step index for highlighting (1, 2, 3, or 4)
+            let visualStep = stepId;
+            if (stepId === 4 && !requiresCotitular) {
+                visualStep = 3; // Shift to 3 if we are on results and skipped cotitular
+            }
+
+            // Update Steps Visual Node active classes
+            document.querySelectorAll('.step-node').forEach(node => {
+                const nodeStep = parseInt(node.getAttribute('data-step'));
+                const circle = node.querySelector('.step-circle');
+                const label = node.querySelector('.step-label');
+
+                let targetStep = nodeStep;
+                if (nodeStep === 4 && !requiresCotitular) {
+                    targetStep = 3; // Shift final step's visual target matching
+                }
+
+                if (targetStep === visualStep) {
+                    node.classList.add('active');
+                    if (circle) circle.className = "step-circle w-6 h-6 rounded-full bg-viventa-magenta text-white text-[11px] font-bold flex items-center justify-center ring-4 ring-pink-100";
+                    if (label) label.className = "step-label text-xs font-bold text-viventa-magenta";
+                } else if (targetStep < visualStep) {
+                    node.classList.add('active');
+                    if (circle) circle.className = "step-circle w-6 h-6 rounded-full bg-viventa-black text-white text-[11px] font-bold flex items-center justify-center";
+                    if (label) label.className = "step-label text-xs font-bold text-viventa-black";
+                } else {
+                    node.classList.remove('active');
+                    if (circle) circle.className = "step-circle w-6 h-6 rounded-full bg-viventa-gray text-viventa-grayb text-[11px] font-bold flex items-center justify-center";
+                    if (label) label.className = "step-label text-xs font-bold text-viventa-grayb";
+                }
+            });
+
+            window.scrollTo({ top: 150, behavior: 'smooth' });
+        }
+
+        // Input validation per Step
+        function validateAndGoToStep(nextStep) {
+            if (nextStep === 2) {
+                // Validate Step 1 Inputs (Added birthdate to validation)
+                const fields = ['p1_primer_nombre', 'p1_apellidos', 'p1_cc', 'p1_fecha_nacimiento', 'p1_actividad', 'p1_ingresos', 'p1_pais', 'p1_score', 'p1_fecha_ingreso', 'p1_estatus_migratorio'];
+                let isValid = true;
+                fields.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (!el || el.value === "") {
+                        if(el) el.classList.add('border-rose-400', 'bg-rose-50/20');
+                        isValid = false;
+                    } else {
+                        if(el) el.classList.remove('border-rose-400', 'bg-rose-50/20');
+                    }
+                });
+
+                if (!isValid) {
+                    showModal("Campos Incompletos", "Hay campos requeridos de datos personales, fecha de nacimiento o radicación en el exterior sin diligenciar.");
+                    return;
+                }
+                goToStep(2);
+            } 
+            else if (nextStep === 3) {
+                // Validate Step 2 Inputs (Egresos and buró)
+                const fields = ['p1_num_tarjetas', 'p1_cupo_tarjetas', 'p1_cuota_tarjetas', 'p1_otros_creditos'];
+                let isValid = true;
+                fields.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (!el || el.value === "") {
+                        if(el) el.classList.add('border-rose-400', 'bg-rose-50/20');
+                        isValid = false;
+                    } else {
+                        if(el) el.classList.remove('border-rose-400', 'bg-rose-50/20');
+                    }
+                });
+
+                // Conditional validation for sector de la mora if Colombia mora is Yes
+                const moraColVal = document.querySelector('input[name="p1_mora_colombia"]:checked').value;
+                if (moraColVal === 'si') {
+                    const sectorField = document.getElementById('p1_mora_sector');
+                    if (!sectorField.value) {
+                        sectorField.classList.add('border-rose-400', 'bg-rose-50/20');
+                        isValid = false;
+                    } else {
+                        sectorField.classList.remove('border-rose-400', 'bg-rose-50/20');
+                    }
+                }
+
+                // Validation of Centrales Authorization
+                const autorizacionEl = document.querySelector('input[name="p1_autorizacion_centrales"]:checked');
+                if (!autorizacionEl) {
+                    showModal("Autorización Requerida", "Debe marcar si el cliente autoriza o no la consulta a centrales de riesgo.");
+                    return;
+                }
+
+                if (autorizacionEl.value === 'no') {
+                    displayInstantRejection("no_autorizado");
+                    return;
+                }
+
+                if (!isValid) {
+                    showModal("Campos Incompletos", "Diligencie correctamente el detalle de egresos fijos del solicitante.");
+                    return;
+                }
+
+                // Branch logic: Does it require Cotitular?
+                if (requiresCotitular) {
+                    goToStep(3);
+                } else {
+                    submitSimulation();
+                }
+            }
+        }
+
+        // Logic for decision engine simulation
+        function submitSimulation() {
+            // If requires cotitular, validate step 3 fields first
+            if (requiresCotitular) {
+                const fields = ['p2_primer_nombre', 'p2_apellidos', 'p2_cc', 'p2_actividad', 'p2_ingresos', 'p2_egresos', 'p2_pais', 'p2_score', 'p2_fecha_ingreso', 'p2_estatus'];
+                let isValid = true;
+                fields.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (!el.value) {
+                        el.classList.add('border-rose-400', 'bg-rose-50/20');
+                        isValid = false;
+                    } else {
+                        el.classList.remove('border-rose-400', 'bg-rose-50/20');
+                    }
+                });
+
+                if (!isValid) {
+                    showModal("Información Incompleta", "Hay campos requeridos de la sección de Co-Titular pendientes de registrar.");
+                    return;
+                }
+            }
+
+            calculateEngineResults();
+        }
+
+        // Core Credit Engine Rules with Corrected Outlays (Egresos) Capacity Formula
+        function calculateEngineResults() {
+            // Gather inputs
+            const p1_nombre = document.getElementById('p1_primer_nombre').value + ' ' + document.getElementById('p1_apellidos').value;
+            const p1_ingresos = parseFloat(document.getElementById('p1_ingresos').value);
+            const p1_score = parseInt(document.getElementById('p1_score').value);
+            const p1_estatus = document.getElementById('p1_estatus_migratorio').value;
+
+            // Gather Credit History inputs
+            const p1_mora_colombia = document.querySelector('input[name="p1_mora_colombia"]:checked').value;
+            const p1_mora_sector = document.getElementById('p1_mora_sector').value;
+            const p1_mora_exterior = document.querySelector('input[name="p1_mora_exterior"]:checked').value;
+
+            // Gather Outlays
+            const p1_cuota_tarjetas = parseFloat(document.getElementById('p1_cuota_tarjetas').value) || 0;
+            const p1_otros_creditos = parseFloat(document.getElementById('p1_otros_creditos').value) || 0;
+            const total_egresos_mensuales = p1_cuota_tarjetas + p1_otros_creditos;
+
+            let total_ingresos = p1_ingresos;
+            let score_final = p1_score;
+            let estatus_critico = p1_estatus;
+            let egresos_totales = total_egresos_mensuales;
+
+            let p2_nombre = "";
+            if (requiresCotitular) {
+                const p2_ingresos = parseFloat(document.getElementById('p2_ingresos').value) || 0;
+                const p2_score = parseInt(document.getElementById('p2_score').value) || 0;
+                const p2_estatus = document.getElementById('p2_estatus').value;
+                const p2_egresos = parseFloat(document.getElementById('p2_egresos').value) || 0;
+                p2_nombre = document.getElementById('p2_primer_nombre').value + ' ' + document.getElementById('p2_apellidos').value;
+
+                total_ingresos += p2_ingresos;
+                egresos_totales += p2_egresos;
+                score_final = Math.round((p1_score + p2_score) / 2);
+                
+                if (p1_estatus === 'sin_estatus' || p2_estatus === 'sin_estatus') {
+                    estatus_critico = 'sin_estatus';
+                }
+            }
+
+            // CORRECT FORMULA: 
+            const max_cuota_hipotecaria_legal = total_ingresos * 0.40; // 40% Colombian Housing Law limit
+            const disponible_efectivo = Math.max(0, total_ingresos - egresos_totales); // Real disposable cash flow
+
+            // The absolute capacity limit is the lesser of the legal 40% limit and the remaining cash flow
+            const ingresos_netos_disponibles = Math.max(0, Math.min(max_cuota_hipotecaria_legal, disponible_efectivo));
+
+            // Decision Matrix logic
+            let approved = true;
+            let reject_reason = "";
+            let financial_entity = "";
+            let monto_maximo = 0;
+            let plazo_meses = 0;
+            let tasa_anual = "";
+
+            // Evaluate Credit history risks (Top priority block)
+            if (p1_mora_exterior === 'si') {
+                approved = false;
+                reject_reason = "collections_exterior";
+            } else if (p1_mora_colombia === 'si' && p1_mora_sector === 'financiero') {
+                approved = false;
+                reject_reason = "mora_financiera_colombia";
+            } else if (score_final < 580) {
+                approved = false;
+                reject_reason = "score_bajo";
+            } else if (estatus_critico === 'sin_estatus' && score_final < 650) {
+                approved = false;
+                reject_reason = "sin_estatus_regulado";
+            } else if (total_ingresos < 3000000) {
+                approved = false;
+                reject_reason = "ingresos_insuficientes";
+            } else if (ingresos_netos_disponibles < 600000) { // If final cuota capacity is less than 600.000 COP, capacity is insufficient
+                approved = false;
+                reject_reason = "capacidad_endeudamiento_insuficiente";
+            }
+
+            // Assign entities and terms if passed
+            if (approved) {
+                // Determine capacity multiplier. If real sector mora is present, we adjust limits for caution
+                let limit_factor = 45;
+                if (p1_mora_colombia === 'si' && p1_mora_sector === 'real') {
+                    limit_factor = 25; // Capped capacity due to active small debt
+                }
+
+                // Leverage calculation: we multiply the corrected cuota capacity by a standard bank leveraging factor (approx. 110 times the monthly payment capacity)
+                let capacity_multiplier = 110; 
+                if (p1_mora_colombia === 'si' && p1_mora_sector === 'real') {
+                    capacity_multiplier = 80; 
+                }
+
+                monto_maximo = Math.round(ingresos_netos_disponibles * capacity_multiplier);
+
+                // Caps based on bank scoring and rating
+                if (score_final >= 740 && limit_factor > 25) {
+                    financial_entity = "Bancolombia";
+                    monto_maximo = Math.min(monto_maximo, 600000000); 
+                    plazo_meses = 240; // 20 years
+                    tasa_anual = "12.8% E.A.";
+                } else if (score_final >= 660 && limit_factor > 25) {
+                    financial_entity = "Davivienda";
+                    monto_maximo = Math.min(monto_maximo, 450000000);
+                    plazo_meses = 180; // 15 years
+                    tasa_anual = "13.5% E.A.";
+                } else {
+                    financial_entity = "Banco Unión";
+                    monto_maximo = Math.min(monto_maximo, 250000000);
+                    plazo_meses = 120; // 10 years
+                    tasa_anual = "15.2% E.A.";
+                }
+                
+                // Enforce minimum loan check (50 Million COP)
+                if (monto_maximo < 50000000) {
+                    approved = false;
+                    reject_reason = "capacidad_endeudamiento_insuficiente";
+                    displayRejection(reject_reason, p1_nombre, p2_nombre, score_final, total_ingresos, egresos_totales);
+                } else {
+                    displayApproval(financial_entity, monto_maximo, plazo_meses, tasa_anual, p1_nombre, p2_nombre, p1_mora_colombia === 'si', ingresos_netos_disponibles);
+                }
+            } else {
+                displayRejection(reject_reason, p1_nombre, p2_nombre, score_final, total_ingresos, egresos_totales);
+            }
+
+            // Progress to final results step display (step-content-4)
+            goToStep(4);
+        }
+
+        // Instant Rejection for NO authorization
+        function displayInstantRejection(type) {
+            const container = document.getElementById('result-payload');
+            container.innerHTML = `
+                <div class="space-y-6 text-center py-6">
+                    <div class="w-16 h-16 rounded-full bg-rose-50 text-rose-600 flex items-center justify-center mx-auto shadow-md animate-pulse">
+                        <i data-lucide="shield-alert" class="w-8 h-8"></i>
+                    </div>
+                    <h3 class="font-serif text-2xl font-extrabold text-viventa-black">PROCESO PAUSADO - REQUISITO DE LEY</h3>
+                    <p class="text-viventa-grayb text-sm max-w-xl mx-auto leading-relaxed font-semibold">
+                        Los bancos aliados en Colombia exigen de manera estricta y obligatoria la autorización de consulta en centrales firmada físicamente por el cliente. Sin este documento, las políticas internas de radicación bloquean la simulación.
+                    </p>
+                    <div class="flex justify-center pt-2">
+                        <button type="button" onclick="goToStep(2)" class="px-5 h-[52px] bg-viventa-black hover:bg-slate-800 text-white rounded-xl text-xs font-bold transition-all flex items-center justify-center">
+                            Regresar y Adjuntar Autorización
+                        </button>
+                    </div>
+                </div>
+            `;
+            goToStep(4);
+            lucide.createIcons();
+        }
+
+        // Render Pre-Approval UI
+        function displayApproval(bank, amount, term, rate, name1, name2, hasMoraReal, cuotaDisponible) {
+            const container = document.getElementById('result-payload');
+            const copFormatter = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 });
+
+            let bankLogo = "🏦";
+            if (bank === "Bancolombia") {
+                bankLogo = "💛";
+            } else if (bank === "Davivienda") {
+                bankLogo = "❤️";
+            } else {
+                bankLogo = "💙";
+            }
+
+            container.innerHTML = `
+                <div class="space-y-6 animate-in fade-in duration-500">
+                    <div class="text-center space-y-2">
+                        <div class="w-12 h-12 rounded-full bg-viventa-lightgreen/50 text-emerald-700 flex items-center justify-center mx-auto shadow-sm">
+                            <i data-lucide="check-circle" class="w-6 h-6"></i>
+                        </div>
+                        <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-600">VIABILIDAD PRE-APROBADA EXITOSA</span>
+                        <h3 class="font-serif text-2xl font-extrabold text-viventa-black">Cifras Consolidadas de la Operación</h3>
+                    </div>
+
+                    ${hasMoraReal ? `
+                    <div class="bg-amber-50 border border-amber-200 text-amber-900 rounded-xl p-4 text-xs font-semibold">
+                        ⚠️ <strong class="text-slate-900">Alerta:</strong> El cliente registra moras menores en el Sector Real. Aunque el banco permite continuar, hemos aplicado un margen de capacidad conservadora. Sugerimos exigir el soporte de pago.
+                    </div>
+                    ` : ''}
+
+                    <!-- CARD FINANCIAL DETAIL FOR AGENT -->
+                    <div class="bg-gradient-to-tr from-viventa-black to-[#484e75] text-white rounded-3xl p-6 relative overflow-hidden border border-slate-700 shadow-md">
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-white/10 pb-4">
+                            <div>
+                                <span class="text-[9px] uppercase tracking-widest text-slate-300 font-bold block">Entidad Asignada por Scoring</span>
+                                <div class="flex items-center gap-2 mt-1">
+                                    <span class="text-lg">${bankLogo}</span>
+                                    <h4 class="text-xl font-extrabold text-white">${bank}</h4>
+                                </div>
+                            </div>
+                            <div class="px-3 py-1 bg-viventa-magenta text-white rounded-lg text-xs font-bold">
+                                Radicación Exterior Activa
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4 text-xs">
+                            <div>
+                                <span class="text-slate-400 block font-bold uppercase text-[9px]">Monto Hipotecario Sugerido</span>
+                                <span class="text-xl md:text-2xl font-black mt-1 text-viventa-pink block">${copFormatter.format(amount)}</span>
+                            </div>
+                            <div>
+                                <span class="text-slate-400 block font-bold uppercase text-[9px]">Plazo Seleccionado</span>
+                                <span class="text-base font-bold mt-1 text-white block">${term} meses (${term/12} años)</span>
+                            </div>
+                            <div>
+                                <span class="text-slate-400 block font-bold uppercase text-[9px]">Tasa Referencial E.A.</span>
+                                <span class="text-base font-bold mt-1 text-viventa-mist block">${rate}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- AGENT ANALYTIC SUMMARY -->
+                    <div class="border border-viventa-grayb/20 rounded-xl p-4 bg-slate-50 space-y-3">
+                        <h5 class="text-xs font-bold text-viventa-black uppercase tracking-wider flex items-center gap-2">
+                            <i data-lucide="bar-chart-2" class="w-4 h-4 text-viventa-magenta"></i>
+                            Análisis Técnico para Radicación (Comercial)
+                        </h5>
+                        <p class="text-xs text-viventa-grayb leading-relaxed font-semibold">
+                            La capacidad de cuota mensual del cliente libre para amortización es de <span class="text-slate-900 font-extrabold">${copFormatter.format(cuotaDisponible)} COP</span>. Cumple a cabalidad la relación cuota-ingreso estipulada en la ley 546/99 de amortización. Proceda con la recolección física de soportes laborales.
+                        </p>
+                    </div>
+
+                    <!-- PRINT ACTION FOR AGENT -->
+                    <div class="flex justify-center">
+                        <button type="button" onclick="window.print()" class="px-6 h-[52px] bg-viventa-black hover:bg-slate-800 text-white font-extrabold rounded-xl text-sm flex items-center justify-center gap-2 shadow-md transition-all">
+                            <i data-lucide="printer" class="w-4 h-4 text-viventa-magenta"></i>
+                            Imprimir Ficha de Radicación (Bancos)
+                        </button>
+                    </div>
+                </div>
+            `;
+            lucide.createIcons();
+        }
+
+        // Render Rejection UI
+        function displayRejection(reason, name1, name2, score, income, totalEgresos) {
+            const container = document.getElementById('result-payload');
+            const mainName = name1.split(' ')[0];
+            const secondaryName = name2 ? name2.split(' ')[0] : '';
+            const copFormatter = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 });
+
+            // Map reasons
+            let reasonTitle = "Perfil en Plan de Fortalecimiento";
+            let reasonExplain = "";
+            let priority_action = "";
+
+            if (reason === "capacidad_endeudamiento_insuficiente") {
+                reasonExplain = `Los compromisos financieros fijos del cliente (${copFormatter.format(totalEgresos)} COP) en su país de residencia consumen un porcentaje elevado en comparación con los ingresos declarados (${copFormatter.format(income)} COP). Su capacidad neta disponible para amortizar cuotas mensuales es inferior al límite técnico de $600.000 COP, inhabilitando un cupo mínimo hipotecario viable.`;
+                priority_action = "Aconsejar al cliente de manera constructiva consolidar deudas extranjeras o prepagar tarjetas de crédito con mayor cuota de pago mensual fija.";
+            } else if (reason === "collections_exterior") {
+                reasonExplain = `El cliente registra reportes de cobros coactivos, cuentas castigadas o Collections activas en el exterior. Los bancos en Colombia inhabilitan de inmediato cualquier radicación si el buró internacional presenta estatus de cobro jurídico o castigado.`;
+                priority_action = "Instruir al cliente a ponerse en contacto con la oficina de cobro extranjera, liquidar el pasivo y remitir el soporte físico de paz y salvo.";
+            } else if (reason === "mora_financiera_colombia") {
+                reasonExplain = `El cliente presenta reportes negativos vigentes de moras activas en el sector financiero de Colombia en Datacrédito o Cifin. El sistema nacional de radicación rechaza automáticamente el perfil.`;
+                priority_action = "Exigir el pago inmediato de las carteras en mora colombianas y adjuntar los certificados de paz y salvo para radicación manual por excepción.";
+            } else if (reason === "score_bajo") {
+                reasonExplain = `El score de crédito extranjero de ${score} puntos está por debajo del umbral mínimo de 580 exigido por las políticas globales de los bancos hipotecarios aliados.`;
+                priority_action = "Recomendar un plan de mejora de puntaje de 3 meses en el exterior, manteniendo consumos de tarjetas de crédito por debajo del 30% del cupo total.";
+            } else if (reason === "sin_estatus_regulado") {
+                reasonExplain = `El estatus migratorio reportado por el cliente en el exterior carece de soportes legales permanentes o vigencia suficiente para respaldar el desembolso a mediano plazo.`;
+                priority_action = "Anexar un co-titular que cuente con residencia permanente, ciudadanía o estatus laboral verificado y estable en el exterior.";
+            } else if (reason === "ingresos_insuficientes") {
+                reasonExplain = `Los ingresos familiares declarados están por debajo de los $3.000.000 COP, límite de ingresos mínimos establecido por los bancos aliados para colombianos que residen en el extranjero.`;
+                priority_action = "Sugerir la unificación de ingresos sumando un Co-Titular directo en Colombia o en el exterior para robustecer la solicitud crediticia.";
+            }
+
+            container.innerHTML = `
+                <div class="space-y-6 animate-in fade-in duration-500">
+                    <div class="text-center space-y-2">
+                        <div class="w-12 h-12 rounded-full bg-viventa-pink text-viventa-magenta flex items-center justify-center mx-auto shadow-sm">
+                            <i data-lucide="heart" class="w-6 h-6"></i>
+                        </div>
+                        <span class="text-[10px] font-bold uppercase tracking-wider text-viventa-magenta">RUTINA DE PREPARACIÓN DE CASO REQUERIDA</span>
+                        <h3 class="font-serif text-2xl font-extrabold text-viventa-black">${reasonTitle}</h3>
+                    </div>
+
+                    <!-- ADVISOR INTERNAL BREAKDOWN -->
+                    <div class="bg-slate-50 border border-slate-200 rounded-2xl p-5 space-y-4">
+                        <div>
+                            <span class="text-[9px] uppercase tracking-widest text-viventa-grayb font-extrabold block">Causa de No Viabilidad Actual</span>
+                            <p class="text-xs text-slate-700 mt-1 font-semibold leading-relaxed">${reasonExplain}</p>
+                        </div>
+                        <div class="border-t border-slate-200 pt-3">
+                            <span class="text-[9px] uppercase tracking-widest text-viventa-grayb font-extrabold block">Acción Comercial Recomendada</span>
+                            <p class="text-xs text-viventa-magenta mt-1 font-extrabold leading-relaxed">${priority_action}</p>
+                        </div>
+                    </div>
+
+                    <!-- EXPORT PDF WITH REASSURING CLIENT TONE -->
+                    <div class="bg-viventa-black text-white p-5 rounded-2xl flex flex-col sm:flex-row justify-between items-center gap-4">
+                        <div class="text-center sm:text-left space-y-1">
+                            <h5 class="text-xs font-bold text-viventa-yellow uppercase tracking-wider">Plan de Acción en PDF para el Cliente</h5>
+                            <p class="text-[11px] text-slate-300 font-medium">Descarga la carta formal en tono afirmativo y de mentoría para que motives al cliente a optimizar sus finanzas y radicar con nosotros próximamente.</p>
+                        </div>
+                        <button type="button" onclick="generateAccionPDF('${reason}', '${name1}', '${secondaryName}', ${score}, ${income}, ${totalEgresos})" class="px-5 h-[52px] bg-viventa-magenta hover:bg-[#c20054] text-white font-extrabold rounded-xl text-xs flex items-center justify-center gap-2 shadow-lg shrink-0 transition-all">
+                            <i data-lucide="download-cloud" class="w-4 h-4"></i>
+                            Descargar Plan PDF
+                        </button>
+                    </div>
+                </div>
+            `;
+            lucide.createIcons();
+        }
+
+        // PDF Generation using jsPDF aligning with Viventa Corporate Palette and Warm/Affirmative client tone
+        function generateAccionPDF(reason, name1, secondaryName, score, income, totalEgresos) {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            const copFormatter = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 });
+
+            // Set dynamic date
+            const dateStr = new Date().toLocaleDateString('es-CO', { year: 'numeric', month: 'long', day: 'numeric' });
+
+            // Beautiful header colors and decoration (Viventa Brand style)
+            doc.setFillColor(50, 55, 85); // #323755 (Viventa Black)
+            doc.rect(0, 0, 210, 40, 'F');
+
+            // Header Text
+            doc.setTextColor(255, 255, 255);
+            doc.setFont("Helvetica", "bold");
+            doc.setFontSize(15);
+            doc.text("VIVENTA - PLAN DE FORTALECIMIENTO FINANCIERO", 15, 18);
+            
+            doc.setFont("Helvetica", "normal");
+            doc.setFontSize(10);
+            doc.setTextColor(230, 0, 100); // #E60064 (Viventa Magenta)
+            doc.text("Tu Guía Sincero y Mentor de Confianza en la Distancia", 15, 26);
+            doc.text(`Fecha de diagnóstico: ${dateStr}`, 15, 33);
+
+            // Body Setup
+            doc.setTextColor(50, 55, 85); // #323755
+            doc.setFont("Helvetica", "bold");
+            doc.setFontSize(11);
+            doc.text(`Destinatario: ${name1} ${secondaryName ? ' y ' + secondaryName : ''}`, 15, 55);
+
+            doc.setFont("Helvetica", "normal");
+            doc.setFontSize(10);
+            
+            let letterText = `Querido amigo ${name1.split(' ')[0]},\n\n` +
+                "Escribo esta carta con el afecto, respeto y la absoluta confianza que le tengo a un gran soñador en el exterior. " +
+                "Cruzar fronteras y abrirse paso en otra nación es una de las hazañas más valientes que un colombiano puede emprender. " +
+                "Hoy, tras analizar detenidamente tu diagnóstico crediticio, quiero transmitirte un mensaje con firme convicción de parte de todo el equipo Viventa: " +
+                "¡ESTO NO ES UN RECHAZO, ES SOLO EL INICIO DE UN CAMINO DE PREPARACIÓN EXCEPCIONAL!\n\n" +
+                "A veces, la vida nos pide hacer una pausa inteligente para organizar nuestras bases financieras. " +
+                "El análisis nos indica que tu perfil tiene un potencial tremendo, pero requerimos optimizar ciertos factores clave " +
+                "antes de presentarlo con absoluta seguridad a nuestros bancos de primer nivel como Bancolombia o Davivienda.\n\n";
+
+            if (reason === "capacidad_endeudamiento_insuficiente") {
+                letterText += "TU PUNTO CLAVE DE MEJORA (CAPACIDAD DE ENDEUDAMIENTO):\n" +
+                    `Tus compromisos mensuales actuales de tarjetas y préstamos ascienden a ${copFormatter.format(totalEgresos)} COP mensuales, ` +
+                    `absorbiendo una porción importante de tu ingreso mensual consolidado de ${copFormatter.format(income)} COP.\n\n` +
+                    "PASOS DE ACCIÓN RECOMENDADOS:\n" +
+                    "1. Efectúa abonos extraordinarios dirigidos a saldar tarjetas de crédito con cuotas fijas altas.\n" +
+                    "2. Cancela el cupo de las tarjetas de crédito que no utilices activamente (los bancos calculan riesgo sobre el cupo total).\n" +
+                    "3. Evita adquirir deudas de consumo, vehículos o financiamientos rápidos durante los próximos 180 días.\n\n";
+            } else if (reason === "collections_exterior") {
+                letterText += "TU PUNTO CLAVE DE MEJORA (COLLECTIONS EN EL EXTERIOR):\n" +
+                    "Hemos detectado registros de cuentas castigadas (Collections) en el exterior. El sistema bancario hipotecario colombiano " +
+                    "solicita limpieza total en historiales internacionales para viabilizar cupos de crédito remotos.\n\n" +
+                    "PASOS DE ACCIÓN RECOMENDADOS:\n" +
+                    "1. Ponte en contacto con la entidad de cobranza, realiza un acuerdo de pago y exige tu paz y salvo físico.\n" +
+                    "2. Monitorea que tu score vuelva a tomar fuerza una vez el reporte negativo sea sabaneado.\n" +
+                    "3. Sigue ahorrando con disciplina para aumentar tu cuota inicial, lo que facilitará tu aprobación posterior.\n\n";
+            } else if (reason === "mora_financiera_colombia") {
+                letterText += "TU PUNTO CLAVE DE MEJORA (MORAS FINANCIERAS EN COLOMBIA):\n" +
+                    "Se registran alertas negativas vigentes en el sector financiero colombiano. Sanear estas moras internas en Datacrédito " +
+                    "y Cifin es el paso primordial para abrir nuevamente las puertas bancarias nacionales.\n\n" +
+                    "PASOS DE ACCIÓN RECOMENDADOS:\n" +
+                    "1. Efectúa el pago total del saldo pendiente con la entidad financiera acreedora.\n" +
+                    "2. Solicita el paz y salvo oficial físico y radícalo ante Viventa para respaldar tu saneamiento de cartera.\n" +
+                    "3. Mantén un perfil libre de deudas morosas durante este período de transición.\n\n";
+            } else if (reason === "score_bajo") {
+                letterText += "TU PUNTO CLAVE DE MEJORA:\n" +
+                    `Hemos identificado que tu credit score en el exterior se encuentra en ${score} puntos. El sistema financiero de vivienda ` +
+                    "colombiana exige habitualmente un umbral mínimo de 580 o 600 puntos internacionales. Esto es algo que podemos solucionar de " +
+                    "forma metódica en el corto plazo. ¡Estoy convencido de que lo lograrás pronto!\n\n" +
+                    "PASOS DE ACCIÓN RECOMENDADOS:\n" +
+                    "1. Utiliza tus tarjetas de crédito con disciplina: no consumas más del 30% del cupo y realiza el pago completo 3 días antes del corte.\n" +
+                    "2. Corrige cualquier reporte erróneo en agencias crediticias de tu país de residencia.\n" +
+                    "3. Mantén tus deudas en el exterior al mínimo, priorizando el saldo de préstamos de consumo rápido.\n\n";
+            } else if (reason === "sin_estatus_regulado") {
+                letterText += "TU PUNTO CLAVE DE MEJORA:\n" +
+                    "Actualmente, la consolidación documental de tu estatus migratorio requiere de mayores soportes. La estabilidad de " +
+                    "residencia o un permiso de trabajo con antigüedad son credenciales sumamente valiosas ante los analistas de crédito colombianos.\n\n" +
+                    "PASOS DE ACCIÓN RECOMENDADOS:\n" +
+                    "1. Consolida la constancia de ingresos a través de cuentas bancarias formales del exterior por un período mínimo de 6 meses.\n" +
+                    "2. Procura adjuntar en tu próxima simulación un Co-titular que resida en Colombia o con un estatus migratorio formal consolidado.\n" +
+                    "3. Solicita declaraciones de impuestos estables (Taxes) del país donde habitas hoy.\n\n";
+            } else {
+                letterText += "TU PUNTO CLAVE DE MEJORA:\n" +
+                    `Tus ingresos declarados equivalen a $${copFormatter.format(income)} COP. Para adquirir vivienda desde el exterior, ` +
+                    "las entidades buscan certificar una capacidad de endeudamiento familiar un poco más holgada que permita mitigar el riesgo cambiario.\n\n" +
+                    "PASOS DE ACCIÓN RECOMENDADOS:\n" +
+                    "1. Apóyate en un segundo proponente o co-titular (cónyuge, padres, hermanos) para sumar capacidad de pago conjunta.\n" +
+                    "2. Declara y certifica tus ingresos complementarios (servicios adicionales, honorarios o negocios propios con estados financieros bancarios).\n" +
+                    "3. Enfócate en consolidar un ahorro del 35% al 40% del valor comercial de la vivienda, reduciendo el monto a financiar.\n\n";
+            }
+
+            letterText += "TU CRONOGRAMA DE TRABAJO (Próximos 6 meses):\n" +
+                "• Mes 1 a 3: Ordenar deudas prioritarias, liquidar cuotas de consumo y tarjetas en el exterior.\n" +
+                "• Mes 4 y 5: Consolidar extractos bancarios impecables, sin sobregiros y con capacidad de ahorro.\n" +
+                "• Mes 6: Volver a simular con tu amigo de confianza Viventa para dar el paso definitivo de aprobación.\n\n" +
+                "Recuerda siempre: las grandes metas se construyen con bloques de disciplina diaria. " +
+                "Confío plenamente en tu tenacidad. Tu sueño de tener casa propia en tu amada patria está cada vez más cerca. " +
+                "¡Estás en el camino correcto y Viventa te estará esperando para celebrarlo!\n\n" +
+                "Con gran aprecio y fe,\n" +
+                "Tu Amigo Sabio y Consejero Financiero Viventa";
+
+            // Split text to fit page beautifully
+            const splitLines = doc.splitTextToSize(letterText, 180);
+            doc.text(splitLines, 15, 63);
+
+            // Footer of Page 1 decoration
+            doc.setFillColor(230, 0, 100); // #E60064
+            doc.rect(0, 287, 210, 10, 'F');
+
+            // Save the document
+            doc.save(`Plan_Fortalecimiento_Viventa_${name1.split(' ')[0]}.pdf`);
+        }
+
+        // Reset Simulator parameters
+        function resetSimulator() {
+            currentStep = 1;
+            requiresCotitular = false;
+
+            // Reset inputs
+            document.getElementById('simulatorForm').reset();
+            
+            // Hide conditional sectors on reset
+            toggleMoraSector(false);
+
+            // Hide/Show correct step content
+            goToStep(1);
+            toggleCotitularNode(false);
+            updateLiveDashboard();
+        }
+    </script>
+</body>
+</html>
