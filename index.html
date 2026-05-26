@@ -59,41 +59,15 @@
         }
     </style>
 </head>
-<body class="bg-slate-50 min-h-screen text-viventa-black antialiased flex flex-col justify-between">
-
-    <!-- HEADER DE HERRAMIENTA INTERNA -->
-    <header class="border-b border-viventa-gray bg-white sticky top-0 z-50 transition-all duration-300">
-        <div class="max-w-7xl mx-auto px-4 py-3.5 flex flex-col sm:flex-row justify-between items-center gap-4">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-viventa-black flex items-center justify-center text-white">
-                    <i data-lucide="calculator" class="w-5 h-5 text-viventa-magenta"></i>
-                </div>
-                <div>
-                    <h1 class="font-extrabold text-xl text-viventa-black tracking-tight flex items-center gap-1.5">
-                        viventa <span class="text-xs px-2.5 py-0.5 rounded-full bg-viventa-magenta text-white font-bold tracking-normal uppercase">AGENT</span>
-                    </h1>
-                    <p class="text-[9px] text-viventa-grayb font-extrabold tracking-widest uppercase">Portal de Viabilidad Crediticia - Uso Exclusivo Comercial</p>
-                </div>
-            </div>
-            <div class="flex items-center gap-2 bg-viventa-gray px-4 py-2 rounded-xl text-xs text-viventa-black font-bold">
-                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                <span>Motor de Decisión Conectado</span>
-            </div>
-        </div>
-    </header>
+<body class="bg-slate-50 min-h-screen text-viventa-black antialiased flex flex-col justify-between py-6">
 
     <!-- MAIN CONTAINER -->
-    <main class="max-w-6xl mx-auto px-4 py-6 flex-grow w-full space-y-6">
+    <main class="max-w-6xl mx-auto px-4 flex-grow w-full space-y-6">
         
-        <!-- STEP INDICATOR -->
-        <div class="bg-white border border-viventa-gray rounded-2xl p-4 flex flex-col md:flex-row items-center justify-between gap-4 shadow-sm">
-            <div>
-                <span class="text-[10px] font-bold tracking-wider text-viventa-magenta uppercase">Proceso de Simulación</span>
-                <h2 class="text-lg font-extrabold text-viventa-black">Evaluación de Capacidad Hipotecaria (Ley 546/99)</h2>
-            </div>
-            
+        <!-- STEP INDICATOR ONLY (COMPACT & HORIZONTALLY CENTERED) -->
+        <div class="bg-white border border-viventa-gray rounded-2xl p-4 flex justify-center items-center shadow-sm">
             <!-- Step dots with uniform style -->
-            <div class="flex items-center gap-3">
+            <div class="flex items-center justify-center gap-3 flex-wrap">
                 <div class="flex items-center gap-1.5 step-node active" data-step="1">
                     <span class="step-circle w-6 h-6 rounded-full bg-viventa-magenta text-white text-[11px] font-bold flex items-center justify-center">1</span>
                     <span class="step-label text-xs font-bold text-viventa-magenta">Sujeto</span>
@@ -116,62 +90,78 @@
             </div>
         </div>
 
-        <!-- CORRECTED PERSISTENT TOP LIVE DASHBOARD (Horizontal SaaS Panel) -->
+        <!-- COMPACT HORIZONTAL CAPACIDAD DE CUOTA DASHBOARD -->
         <div class="bg-white rounded-2xl border border-viventa-gray shadow-sm p-5 space-y-4">
-            <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+            
+            <!-- Sleek Header with Inline Metrics Summary -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-100 pb-3 gap-2">
                 <div class="flex items-center gap-2">
-                    <span class="w-2 h-2 rounded-full bg-viventa-magenta animate-ping"></span>
-                    <h4 class="text-xs font-extrabold text-viventa-black uppercase tracking-wider">Dashboard de Capacidad en Tiempo Real (Ley de Vivienda 546/99)</h4>
+                    <span class="w-2 h-2 rounded-full bg-viventa-magenta animate-pulse"></span>
+                    <h4 class="text-xs font-extrabold text-viventa-black uppercase tracking-wider">Capacidad de Cuota del Cliente</h4>
                 </div>
-                <!-- Dynamic Semaphore Status Pill -->
-                <div id="live-semaphore" class="px-3 py-1 rounded-full text-xs font-bold bg-viventa-gray text-viventa-grayb transition-all duration-300">
-                    Ingresa ingresos para calcular viabilidad.
+                <!-- Mini Consolidated Metrics inside the header directly -->
+                <div class="flex flex-wrap items-center gap-3 text-[11px] font-bold">
+                    <span class="text-viventa-grayb">Ingresos: <span class="text-viventa-black" id="live-total-income">$0</span></span>
+                    <span class="text-slate-300">|</span>
+                    <span class="text-viventa-grayb">Egresos: <span class="text-viventa-magenta" id="live-total-outlays">$0</span></span>
+                    <span class="text-slate-300">|</span>
+                    <div id="live-semaphore" class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-viventa-gray text-viventa-grayb transition-all duration-300">
+                        Esperando cifras
+                    </div>
                 </div>
             </div>
 
-            <!-- Horizontal Metrics Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-5">
+            <!-- Highly Educational 3-Step Decision Flow Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-stretch">
                 
-                <!-- KPI 1: Cupo Disponible -->
-                <div class="bg-slate-900 text-white rounded-xl p-4 flex flex-col justify-between min-h-[96px] border border-slate-800">
-                    <span class="text-[9px] uppercase tracking-widest text-slate-400 font-extrabold block">Cupo Disponible Cuota</span>
-                    <div class="text-2xl font-black text-viventa-pink" id="live-available-cuota">$0</div>
-                    <span class="text-[9px] text-slate-400 font-medium">Capacidad de pago de cuota</span>
+                <!-- STEP A: TOPE DE LEY -->
+                <div class="bg-slate-50 border border-slate-100 rounded-xl p-4 flex flex-col justify-between min-h-[92px]">
+                    <div class="flex justify-between items-start">
+                        <span class="text-[9px] uppercase tracking-widest text-viventa-grayb font-extrabold block">A. Tope Máximo de Ley (40%)</span>
+                        <i data-lucide="scale" class="w-3.5 h-3.5 text-viventa-grayb"></i>
+                    </div>
+                    <div class="flex items-baseline gap-1 mt-1">
+                        <span class="text-lg font-black text-viventa-black" id="live-max-limit">$0</span>
+                    </div>
+                    <span class="text-[9px] text-viventa-grayb font-semibold tracking-wide">Fórmula: Ingresos x 40%</span>
                 </div>
 
-                <!-- KPI 2: Ingresos Consolidados -->
-                <div class="bg-slate-50 border border-viventa-gray rounded-xl p-4 flex flex-col justify-between min-h-[96px]">
-                    <span class="text-[9px] uppercase tracking-widest text-viventa-grayb font-extrabold block">Ingresos Consolidados</span>
-                    <div class="text-xl font-extrabold text-viventa-black" id="live-total-income">$0</div>
-                    <span class="text-[9px] text-viventa-grayb font-medium">Suma de solicitantes</span>
+                <!-- STEP B: FLUJO DISPONIBLE -->
+                <div class="bg-slate-50 border border-slate-100 rounded-xl p-4 flex flex-col justify-between min-h-[92px]">
+                    <div class="flex justify-between items-start">
+                        <span class="text-[9px] uppercase tracking-widest text-viventa-grayb font-extrabold block">B. Flujo de Caja Disponible</span>
+                        <i data-lucide="wallet" class="w-3.5 h-3.5 text-viventa-grayb"></i>
+                    </div>
+                    <div class="flex items-baseline gap-1 mt-1">
+                        <span class="text-lg font-black text-viventa-black" id="live-disposable-cash">$0</span>
+                    </div>
+                    <span class="text-[9px] text-viventa-grayb font-semibold tracking-wide">Fórmula: Ingresos - Egresos</span>
                 </div>
 
-                <!-- KPI 3: Tope Máximo Legal (40% de ingresos) -->
-                <div class="bg-slate-50 border border-viventa-gray rounded-xl p-4 flex flex-col justify-between min-h-[96px]">
-                    <span class="text-[9px] uppercase tracking-widest text-viventa-grayb font-extrabold block">Tope Máximo Legal (40%)</span>
-                    <div class="text-xl font-extrabold text-viventa-black" id="live-max-limit">$0</div>
-                    <span class="text-[9px] text-viventa-grayb font-medium">Límite por Ley 546/99</span>
-                </div>
-
-                <!-- KPI 4: Egresos Registrados -->
-                <div class="bg-slate-50 border border-viventa-gray rounded-xl p-4 flex flex-col justify-between min-h-[96px]">
-                    <span class="text-[9px] uppercase tracking-widest text-viventa-grayb font-extrabold block">Egresos Registrados</span>
-                    <div class="text-xl font-extrabold text-viventa-magenta" id="live-total-outlays">$0</div>
-                    <span class="text-[9px] text-viventa-grayb font-medium">Obligaciones actuales</span>
+                <!-- STEP C: CUOTA MÁXIMA REAL (RESULTADO) -->
+                <div class="bg-viventa-black text-white rounded-xl p-4 flex flex-col justify-between min-h-[92px] border border-slate-800 ring-2 ring-viventa-magenta/20">
+                    <div class="flex justify-between items-start">
+                        <span class="text-[9px] uppercase tracking-widest text-viventa-pink font-extrabold block">C. Cuota Máxima Viable</span>
+                        <i data-lucide="shield-check" class="w-3.5 h-3.5 text-viventa-mist"></i>
+                    </div>
+                    <div class="flex items-baseline gap-1 mt-1">
+                        <span class="text-xl font-black text-viventa-pink" id="live-available-cuota">$0</span>
+                    </div>
+                    <span class="text-[9px] text-slate-300 font-semibold tracking-wide">Lógica: Menor valor entre A y B</span>
                 </div>
 
             </div>
 
-            <!-- Visual Bar Gauge representing the available legal limit of 40% -->
-            <div class="bg-slate-50 border border-viventa-gray rounded-xl p-3 flex flex-col sm:flex-row items-center justify-between gap-4">
-                <div class="flex items-center gap-2 shrink-0">
-                    <i data-lucide="percent" class="w-4 h-4 text-viventa-magenta"></i>
-                    <span class="text-xs font-bold text-viventa-black uppercase tracking-wider">Porcentaje disponible del cupo legal:</span>
-                    <span id="live-percent-label" class="text-xs font-extrabold text-viventa-magenta">0% Disponible</span>
+            <!-- Sleek Minimalist Progress Bar for Legal Limit utilization -->
+            <div class="bg-slate-50 border border-slate-100 rounded-xl p-3 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div class="flex items-center gap-1.5 shrink-0 text-[11px] font-bold text-viventa-black uppercase tracking-wider">
+                    <i data-lucide="percent" class="w-3.5 h-3.5 text-viventa-magenta"></i>
+                    <span>Tope de Ley Disponible:</span>
+                    <span id="live-percent-label" class="text-viventa-magenta font-black">0% Disponible</span>
                 </div>
                 <div class="w-full bg-slate-200 h-2.5 rounded-full overflow-hidden flex">
-                    <div id="live-bar-debts" class="h-full bg-viventa-magenta transition-all duration-300 w-0" title="Consumido por egresos"></div>
-                    <div id="live-bar-available" class="h-full bg-viventa-mist transition-all duration-300 w-full" title="Disponible para cuota de vivienda"></div>
+                    <div id="live-bar-debts" class="h-full bg-viventa-magenta transition-all duration-300 w-0"></div>
+                    <div id="live-bar-available" class="h-full bg-viventa-mist transition-all duration-300 w-full"></div>
                 </div>
             </div>
         </div>
@@ -190,7 +180,7 @@
                         </h3>
                     </div>
 
-                    <!-- Main Grid standard h-[52px] inputs -->
+                    <!-- Main Grid standard h-[52px] inputs (8 fields for perfect symmetric distribution) -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-5 items-end">
                         <!-- Primer Nombre -->
                         <div class="flex flex-col justify-end w-full">
@@ -217,6 +207,11 @@
                             <label class="block text-xs font-bold text-viventa-black uppercase tracking-wider mb-2">Fecha de Nacimiento *</label>
                             <input type="date" id="p1_fecha_nacimiento" required class="w-full h-[52px] px-4 rounded-xl border border-viventa-grayb/20 focus:ring-2 focus:ring-viventa-magenta/20 focus:border-viventa-magenta outline-none bg-viventa-gray/45 transition-all text-sm font-semibold text-viventa-black">
                         </div>
+                        <!-- Correo Electrónico -->
+                        <div class="flex flex-col justify-end w-full">
+                            <label class="block text-xs font-bold text-viventa-black uppercase tracking-wider mb-2">Correo Electrónico *</label>
+                            <input type="email" id="p1_email" required class="w-full h-[52px] px-4 rounded-xl border border-viventa-grayb/20 focus:ring-2 focus:ring-viventa-magenta/20 focus:border-viventa-magenta outline-none bg-viventa-gray/45 transition-all text-sm font-semibold text-viventa-black" placeholder="Ej. juan.perez@email.com">
+                        </div>
                         <!-- Actividad Económica -->
                         <div class="flex flex-col justify-end w-full">
                             <label class="block text-xs font-bold text-viventa-black uppercase tracking-wider mb-2">Actividad Económica *</label>
@@ -241,7 +236,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-5 items-end border-t border-viventa-gray pt-4">
                         <div class="flex flex-col justify-end w-full">
                             <label class="block text-xs font-bold text-viventa-black uppercase tracking-wider mb-2">País de Radicación *</label>
-                            <select id="p1_pais" required class="w-full h-[52px] px-4 rounded-xl border border-viventa-grayb/20 focus:ring-2 focus:ring-viventa-magenta/20 focus:border-viventa-magenta outline-none bg-white transition-all text-sm font-semibold text-viventa-black">
+                            <select id="p1_pais" required class="w-full h-[52px] px-4 rounded-xl border border-viventa-grayb/20 focus:ring-2 focus:ring-viventa-magenta/20 focus:border-viventa-magenta outline-none bg-white transition-all text-sm font-semibold text-viventa-black" onchange="updateLiveDashboard()">
                                 <option value="" disabled selected>Selecciona país...</option>
                                 <option value="EEUU">EEUU</option>
                                 <option value="Chile">Chile</option>
@@ -259,7 +254,7 @@
                         </div>
                         <div class="flex flex-col justify-end w-full">
                             <label class="block text-xs font-bold text-viventa-black uppercase tracking-wider mb-2">Estatus Migratorio *</label>
-                            <select id="p1_estatus_migratorio" required class="w-full h-[52px] px-4 rounded-xl border border-viventa-grayb/20 focus:ring-2 focus:ring-viventa-magenta/20 focus:border-viventa-magenta outline-none bg-white transition-all text-sm font-semibold text-viventa-black">
+                            <select id="p1_estatus_migratorio" required class="w-full h-[52px] px-4 rounded-xl border border-viventa-grayb/20 focus:ring-2 focus:ring-viventa-magenta/20 focus:border-viventa-magenta outline-none bg-white transition-all text-sm font-semibold text-viventa-black" onchange="updateLiveDashboard()">
                                 <option value="" disabled selected>Selecciona estatus...</option>
                                 <option value="residencia">Residencia permanente / Ciudadano</option>
                                 <option value="permiso_trabajo">Permiso de Trabajo</option>
@@ -363,22 +358,57 @@
                             </select>
                         </div>
 
-                        <!-- Col 3: Collections en el Exterior -->
-                        <div class="flex flex-col justify-end h-full">
-                            <label class="block text-[10px] font-bold text-viventa-black uppercase tracking-wider mb-2">¿Tiene Collections en exterior? *</label>
-                            <div class="flex gap-2 h-[52px] w-full">
-                                <label class="flex-1 h-full">
-                                    <input type="radio" name="p1_mora_exterior" value="no" checked class="peer sr-only">
-                                    <div class="h-full flex items-center justify-center rounded-xl border border-viventa-grayb/20 bg-white cursor-pointer peer-checked:border-viventa-magenta peer-checked:bg-viventa-pink/20 transition-all font-bold text-xs text-viventa-black text-center">
-                                        No
-                                    </div>
-                                </label>
-                                <label class="flex-1 h-full">
-                                    <input type="radio" name="p1_mora_exterior" value="si" class="peer sr-only">
-                                    <div class="h-full flex items-center justify-center rounded-xl border border-viventa-grayb/20 bg-white cursor-pointer peer-checked:border-viventa-magenta peer-checked:bg-viventa-pink/20 transition-all font-bold text-xs text-viventa-black text-center">
-                                        Sí
-                                    </div>
-                                </label>
+                        <!-- Col 3: Paz y Salvo en Colombia (Estable) -->
+                        <div id="p1_mora_paz_salvo_container" class="opacity-40 select-none pointer-events-none transition-all duration-300 flex flex-col justify-end h-full">
+                            <label class="block text-[10px] font-bold text-viventa-black uppercase tracking-wider mb-2">
+                                ¿Cuenta con Paz y Salvo? *
+                            </label>
+                            <select id="p1_mora_paz_salvo" disabled class="w-full h-[52px] px-4 rounded-xl border border-viventa-grayb/20 focus:ring-2 focus:ring-viventa-magenta/20 focus:border-viventa-magenta outline-none bg-white transition-all text-xs font-semibold text-viventa-black">
+                                <option value="" disabled selected>Seleccione...</option>
+                                <option value="si">Sí, cuenta con Paz y Salvo</option>
+                                <option value="no">No cuenta con Paz y Salvo</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- COLLECTIONS EN EEUU PANEL -->
+                    <div class="bg-slate-50 p-5 rounded-2xl border border-viventa-gray space-y-4">
+                        <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider">Historial de Castigos o Collections en EEUU</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+                            <div class="flex flex-col justify-end">
+                                <label class="block text-[10px] font-bold text-viventa-black uppercase tracking-wider mb-2">¿Tiene Collections? *</label>
+                                <div class="flex gap-2 h-[52px] w-full">
+                                    <label class="flex-1 h-full">
+                                        <input type="radio" name="p1_mora_exterior" value="no" checked class="peer sr-only" onchange="toggleCollectionsFields(false)">
+                                        <div class="h-full flex items-center justify-center rounded-xl border border-viventa-grayb/20 bg-white cursor-pointer peer-checked:border-viventa-magenta peer-checked:bg-viventa-pink/20 transition-all font-bold text-xs text-viventa-black text-center">
+                                            No
+                                        </div>
+                                    </label>
+                                    <label class="flex-1 h-full">
+                                        <input type="radio" name="p1_mora_exterior" value="si" class="peer sr-only" onchange="toggleCollectionsFields(true)">
+                                        <div class="h-full flex items-center justify-center rounded-xl border border-viventa-grayb/20 bg-white cursor-pointer peer-checked:border-viventa-magenta peer-checked:bg-viventa-pink/20 transition-all font-bold text-xs text-viventa-black text-center">
+                                            Sí
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <!-- Medical collections USD value -->
+                            <div id="coll_med_container" class="opacity-40 select-none pointer-events-none transition-all duration-300">
+                                <label class="block text-[10px] font-bold text-viventa-black uppercase tracking-wider mb-2">Collections Médicas (USD) *</label>
+                                <input type="number" id="p1_collections_medicas" disabled min="0" class="w-full h-[52px] px-4 rounded-xl border border-viventa-grayb/20 focus:ring-2 focus:ring-viventa-magenta/20 focus:border-viventa-magenta outline-none bg-white text-sm font-semibold text-viventa-black" placeholder="0">
+                            </div>
+
+                            <!-- Non-Medical collection quantity -->
+                            <div id="coll_no_med_qty_container" class="opacity-40 select-none pointer-events-none transition-all duration-300">
+                                <label class="block text-[10px] font-bold text-viventa-black uppercase tracking-wider mb-2">Collections No Médicas (Cant.) *</label>
+                                <input type="number" id="p1_collections_no_medicas_qty" disabled min="0" class="w-full h-[52px] px-4 rounded-xl border border-viventa-grayb/20 focus:ring-2 focus:ring-viventa-magenta/20 focus:border-viventa-magenta outline-none bg-white text-sm font-semibold text-viventa-black" placeholder="0">
+                            </div>
+
+                            <!-- Non-Medical collection USD value -->
+                            <div id="coll_no_med_val_container" class="opacity-40 select-none pointer-events-none transition-all duration-300">
+                                <label class="block text-[10px] font-bold text-viventa-black uppercase tracking-wider mb-2">Collections No Médicas (USD) *</label>
+                                <input type="number" id="p1_collections_no_medicas_val" disabled min="0" class="w-full h-[52px] px-4 rounded-xl border border-viventa-grayb/20 focus:ring-2 focus:ring-viventa-magenta/20 focus:border-viventa-magenta outline-none bg-white text-sm font-semibold text-viventa-black" placeholder="0">
                             </div>
                         </div>
                     </div>
@@ -415,7 +445,7 @@
                     </div>
                 </div>
 
-                <!-- STEP 3: CO-TITULAR (CONDICIONAL) -->
+                <!-- STEP 3: CO-TITULAR (CONDICIONAL - 8 FIELDS Grid Symmetric) -->
                 <div id="step-content-3" class="step-content hidden space-y-6">
                     <div class="border-b border-viventa-gray pb-3">
                         <h3 class="text-base font-extrabold text-viventa-black flex items-center gap-2 uppercase tracking-wider">
@@ -424,26 +454,36 @@
                         </h3>
                     </div>
 
-                    <!-- Co-titular Fields with h-[52px] standard -->
+                    <!-- Co-titular Fields with h-[52px] standard - Balanced 8 Fields Grid -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-5 items-end">
-                        <!-- Primer Nombre -->
+                        <!-- Primer Nombre Co-Titular -->
                         <div class="flex flex-col justify-end w-full">
                             <label class="block text-xs font-bold text-viventa-black uppercase tracking-wider mb-2">Primer Nombre Co-Titular *</label>
                             <input type="text" id="p2_primer_nombre" class="w-full h-[52px] px-4 rounded-xl border border-viventa-grayb/20 focus:ring-2 focus:ring-viventa-magenta/20 focus:border-viventa-magenta outline-none bg-viventa-gray/45 transition-all text-sm font-semibold text-viventa-black" placeholder="Ej. María">
                         </div>
-                        <!-- Apellidos -->
+                        <!-- Segundo Nombre Co-Titular -->
+                        <div class="flex flex-col justify-end w-full">
+                            <label class="block text-xs font-bold text-viventa-black uppercase tracking-wider mb-2">Segundo Nombre Co-Titular</label>
+                            <input type="text" id="p2_segundo_nombre" class="w-full h-[52px] px-4 rounded-xl border border-viventa-grayb/20 focus:ring-2 focus:ring-viventa-magenta/20 focus:border-viventa-magenta outline-none bg-viventa-gray/45 transition-all text-sm font-semibold text-viventa-black" placeholder="Ej. Victoria (Opcional)">
+                        </div>
+                        <!-- Apellidos Co-Titular -->
                         <div class="flex flex-col justify-end w-full">
                             <label class="block text-xs font-bold text-viventa-black uppercase tracking-wider mb-2">Apellidos Co-Titular *</label>
                             <input type="text" id="p2_apellidos" class="w-full h-[52px] px-4 rounded-xl border border-viventa-grayb/20 focus:ring-2 focus:ring-viventa-magenta/20 focus:border-viventa-magenta outline-none bg-viventa-gray/45 transition-all text-sm font-semibold text-viventa-black" placeholder="Ej. Castro">
                         </div>
-                        <!-- CC -->
+                        <!-- CC Co-Titular -->
                         <div class="flex flex-col justify-end w-full">
-                            <label class="block text-xs font-bold text-viventa-black uppercase tracking-wider mb-2">N° Documento (CC) *</label>
+                            <label class="block text-xs font-bold text-viventa-black uppercase tracking-wider mb-2">N° Documento Co-Titular (CC) *</label>
                             <input type="text" id="p2_cc" class="w-full h-[52px] px-4 rounded-xl border border-viventa-grayb/20 focus:ring-2 focus:ring-viventa-magenta/20 focus:border-viventa-magenta outline-none bg-viventa-gray/45 transition-all text-sm font-semibold text-viventa-black" placeholder="Ej. 10456789">
                         </div>
-                        <!-- Actividad Económica -->
+                        <!-- Fecha de Nacimiento Co-Titular -->
                         <div class="flex flex-col justify-end w-full">
-                            <label class="block text-xs font-bold text-viventa-black uppercase tracking-wider mb-2">Actividad Económica *</label>
+                            <label class="block text-xs font-bold text-viventa-black uppercase tracking-wider mb-2">Fecha de Nacimiento Co-Titular *</label>
+                            <input type="date" id="p2_fecha_nacimiento" class="w-full h-[52px] px-4 rounded-xl border border-viventa-grayb/20 focus:ring-2 focus:ring-viventa-magenta/20 focus:border-viventa-magenta outline-none bg-viventa-gray/45 transition-all text-sm font-semibold text-viventa-black">
+                        </div>
+                        <!-- Actividad Económica Co-Titular -->
+                        <div class="flex flex-col justify-end w-full">
+                            <label class="block text-xs font-bold text-viventa-black uppercase tracking-wider mb-2">Actividad Económica Co-Titular *</label>
                             <select id="p2_actividad" class="w-full h-[52px] px-4 rounded-xl border border-viventa-grayb/20 focus:ring-2 focus:ring-viventa-magenta/20 focus:border-viventa-magenta outline-none bg-white transition-all text-sm font-semibold text-viventa-black">
                                 <option value="" disabled selected>Selecciona actividad...</option>
                                 <option value="empleado">Empleado</option>
@@ -486,17 +526,17 @@
                             </div>
                             <!-- Score Extranjero -->
                             <div class="flex flex-col justify-end w-full">
-                                <label class="block text-xs font-bold text-viventa-grayb mb-2">Score de Crédito Co-Titular *</label>
+                                <label class="block text-xs font-bold text-viventa-black uppercase tracking-wider mb-2">Score de Crédito Co-Titular *</label>
                                 <input type="number" id="p2_score" min="300" max="900" class="w-full h-[52px] px-4 rounded-xl border border-viventa-grayb/20 text-sm font-semibold text-viventa-black outline-none bg-white" placeholder="Ej. 680">
                             </div>
                             <!-- Fecha de ingreso -->
                             <div class="flex flex-col justify-end w-full">
-                                <label class="block text-xs font-bold text-viventa-grayb mb-2">Fecha Ingreso Co-Titular *</label>
+                                <label class="block text-xs font-bold text-viventa-black uppercase tracking-wider mb-2">Fecha Ingreso Co-Titular *</label>
                                 <input type="date" id="p2_fecha_ingreso" class="w-full h-[52px] px-4 rounded-xl border border-viventa-grayb/20 text-sm font-semibold text-viventa-black outline-none bg-white">
                             </div>
                             <!-- Estatus Migratorio -->
                             <div class="flex flex-col justify-end w-full">
-                                <label class="block text-xs font-bold text-viventa-grayb mb-2">Estatus Migratorio Co-Titular *</label>
+                                <label class="block text-xs font-bold text-viventa-black uppercase tracking-wider mb-2">Estatus Migratorio Co-Titular *</label>
                                 <select id="p2_estatus" class="w-full h-[52px] px-4 rounded-xl border border-viventa-grayb/20 bg-white text-sm font-semibold text-viventa-black outline-none">
                                     <option value="" disabled selected>Selecciona estatus...</option>
                                     <option value="residencia">Residencia</option>
@@ -515,7 +555,6 @@
                             Atrás
                         </button>
                         <button type="button" onclick="submitSimulation()" class="px-6 h-[52px] bg-viventa-magenta hover:bg-[#c20054] text-white font-extrabold rounded-xl shadow-lg transition-all text-sm flex items-center gap-2">
-                            <i data-lucide="cpu" class="w-4 h-4"></i>
                             Procesar Viabilidad
                         </button>
                     </div>
@@ -528,11 +567,15 @@
                 <!-- DINAMICALLY FILLED RESULT AREA -->
                 <div id="result-payload"></div>
                 
-                <!-- RE-SIMULATE ACTION -->
-                <div class="flex justify-center pt-4 border-t border-viventa-gray">
-                    <button type="button" onclick="resetSimulator()" class="px-5 h-[52px] border border-viventa-grayb/20 text-viventa-grayb font-bold rounded-xl hover:bg-viventa-gray transition-all text-sm flex items-center gap-2">
+                <!-- RE-SIMULATE ACTION (UPDATED WITH BACK/MODIFY BUTTON) -->
+                <div class="flex justify-center gap-4 pt-4 border-t border-viventa-gray">
+                    <button type="button" onclick="goBackToForm()" class="px-5 h-[52px] border border-viventa-grayb/20 text-viventa-grayb font-bold rounded-xl hover:bg-viventa-gray transition-all text-sm flex items-center gap-2">
+                        <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                        Modificar Datos (Atrás)
+                    </button>
+                    <button type="button" onclick="resetSimulator()" class="px-5 h-[52px] border border-viventa-magenta text-viventa-magenta font-bold rounded-xl hover:bg-viventa-pink/10 transition-all text-sm flex items-center gap-2">
                         <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
-                        Simular Nueva Opción
+                        Nueva Simulación
                     </button>
                 </div>
             </div>
@@ -545,9 +588,9 @@
                 🦉
             </div>
             <div class="space-y-1">
-                <h4 class="font-extrabold text-viventa-yellow text-xs uppercase tracking-wider">Directiva y Soporte Legal del Canal Viventa</h4>
+                <h4 class="font-extrabold text-viventa-yellow text-xs uppercase tracking-wider">Directiva y Soporte de la Ley de Vivienda</h4>
                 <p class="text-xs text-slate-300 leading-relaxed font-medium">
-                    La Ley de Vivienda en Colombia (Ley 546 de 1999) determina un control riguroso de amortización: la cuota hipotecaria mensual consolidada no puede representar más del 40% de los ingresos demostrados de la unidad familiar. Ante casos rechazados por baja capacidad o mora, emita la carta de fortalecimiento adjunta para fidelizar la futura radicación.
+                    La Ley de Vivienda en Colombia establece un límite estricto de endeudamiento familiar para la compra de vivienda: la cuota mensual del nuevo crédito hipotecario no puede exceder el 40% de los ingresos mensuales certificados de los solicitantes. Es indispensable evaluar la capacidad real como el menor valor entre el cupo legal y el flujo libre disponible.
                 </p>
             </div>
         </div>
@@ -591,11 +634,49 @@
         // Application State
         let currentStep = 1;
         let requiresCotitular = false;
+        let cachedApprovalData = null;
 
         // Dom Elements references
         const stepNodeCotitular = document.getElementById('step-node-cotitular');
         const stepNodeFinal = document.getElementById('step-node-final');
         const lineStepCotitular = document.getElementById('line-step-cotitular');
+
+        // Only Bancolombia, Davivienda and Banco Unión are evaluated now as requested.
+        const bankRules = [
+            {
+                name: "Bancolombia",
+                minAge: 23,
+                maxAge: 74,
+                maxAgeMonths: 74 * 12 + 11,
+                minScore: 600, 
+                rate: "15.52% E.A.",
+                term: 240, // 20 years
+                maxAmount: 600000000,
+                logo: "💛"
+            },
+            {
+                name: "Davivienda",
+                minAge: 18,
+                maxAge: 73,
+                maxAgeMonths: 73 * 12 + 11,
+                minScore: 600,
+                rate: "14.0% E.A.",
+                term: 240, // 20 years
+                maxAmount: 450000000,
+                logo: "❤️"
+            },
+            {
+                name: "Banco Unión",
+                minAge: 18,
+                maxAge: 72,
+                maxAgeMonths: 72 * 12 + 11,
+                minScore: 0, // Indifferent
+                rate: "16.42% E.A.",
+                term: 180, // 15 years max allowed
+                maxAmount: 250000000,
+                logo: "💙"
+            }
+        ];
 
         // Functions to handle Custom Modals instead of standard alert()
         function showModal(title, body) {
@@ -607,6 +688,30 @@
         // Close Custom modal Window
         function closeModal() {
             document.getElementById('custom-modal').classList.add('hidden');
+        }
+
+        // Helper calculations of Age based on DOB string
+        function calculateAge(birthDateString) {
+            const today = new Date();
+            const birthDate = new Date(birthDateString);
+            let age = today.getFullYear() - birthDate.getFullYear();
+            const m = today.getMonth() - birthDate.getMonth();
+            if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+                age--;
+            }
+            return age;
+        }
+
+        // Precise age calculation in months
+        function calculateAgeInMonths(birthDateString) {
+            const today = new Date();
+            const birthDate = new Date(birthDateString);
+            let months = (today.getFullYear() - birthDate.getFullYear()) * 12;
+            months += today.getMonth() - birthDate.getMonth();
+            if (today.getDate() < birthDate.getDate()) {
+                months--;
+            }
+            return months;
         }
 
         // Realtime Visual Agent Dashboard Engine (CORRECTED MATH: compare 40% cap against disposable)
@@ -628,8 +733,8 @@
             const totalIncome = p1_ingresos + p2_ingresos;
             const totalOutlays = p1_cuota_tarjetas + p1_otros_creditos + p2_egresos;
             
-            // Correct logic following user specifications
-            const maxCuotaLimit = totalIncome * 0.40; // 40% Colombian Housing Law limit
+            // Correct logic following user specifications & Ley de Vivienda
+            const maxCuotaLimit = totalIncome * 0.40; // 40% Legal cap
             const disposableIncome = Math.max(0, totalIncome - totalOutlays); // Real disposable cash flow
 
             // Real capacity of new cuota is the minimum between the legal cap and the remaining cash flow
@@ -648,9 +753,10 @@
             // DOM Updates
             document.getElementById('live-total-income').textContent = copFormatter.format(totalIncome);
             document.getElementById('live-max-limit').textContent = copFormatter.format(maxCuotaLimit);
+            document.getElementById('live-disposable-cash').textContent = copFormatter.format(disposableIncome); // Show disposable cash
             document.getElementById('live-total-outlays').textContent = copFormatter.format(totalOutlays);
             document.getElementById('live-available-cuota').textContent = copFormatter.format(availableCuota);
-            document.getElementById('live-percent-label').textContent = `${availablePercent}% Disponible`;
+            document.getElementById('live-percent-label').textContent = `${availablePercent}% de Cupo Disponible`;
 
             // Bar visual adjustment
             const debtBar = document.getElementById('live-bar-debts');
@@ -662,17 +768,17 @@
             const sem = document.getElementById('live-semaphore');
             if (totalIncome === 0) {
                 sem.className = "px-3 py-1 rounded-full text-xs font-bold bg-viventa-gray text-viventa-grayb transition-all duration-300";
-                sem.textContent = "Ingresa ingresos para calcular viabilidad.";
+                sem.textContent = "Esperando cifras...";
             } else {
                 if (availablePercent >= 80) {
                     sem.className = "px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-200 transition-all duration-300";
-                    sem.textContent = "✓ VIABILIDAD DE CUOTA ÓPTIMA";
-                } else if (availablePercent > 30 && availablePercent < 80) {
+                    sem.textContent = "VIABILIDAD ÓPTIMA";
+                } else if (availablePercent > 20 && availablePercent < 80) {
                     sem.className = "px-3 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-800 border border-amber-200 transition-all duration-300";
-                    sem.textContent = "⚠️ CAPACIDAD REDUCIDA / RESTRINGIDA";
+                    sem.textContent = "VIABILIDAD LIMITADA";
                 } else {
                     sem.className = "px-3 py-1 rounded-full text-xs font-bold bg-rose-100 text-rose-800 border border-rose-200 transition-all duration-300";
-                    sem.textContent = "❌ SIN CAPACIDAD DISPONIBLE";
+                    sem.textContent = "NO VIABLE";
                 }
             }
         }
@@ -682,6 +788,8 @@
             const container = document.getElementById('p1_mora_sector_container');
             const selectField = document.getElementById('p1_mora_sector');
             const reqLabel = document.getElementById('mora_sector_req_label');
+            const pzContainer = document.getElementById('p1_mora_paz_salvo_container');
+            const pzField = document.getElementById('p1_mora_paz_salvo');
             
             if (show) {
                 container.classList.remove('opacity-40', 'select-none', 'pointer-events-none');
@@ -689,6 +797,10 @@
                 selectField.required = true;
                 reqLabel.textContent = "*";
                 reqLabel.className = "text-viventa-magenta font-bold";
+                
+                pzContainer.classList.remove('opacity-40', 'select-none', 'pointer-events-none');
+                pzField.disabled = false;
+                pzField.required = true;
             } else {
                 container.classList.add('opacity-40', 'select-none', 'pointer-events-none');
                 selectField.disabled = true;
@@ -697,10 +809,43 @@
                 reqLabel.textContent = "(No aplica)";
                 reqLabel.className = "text-viventa-grayb font-semibold";
                 selectField.classList.remove('border-rose-400', 'bg-rose-50/20');
+                
+                pzContainer.classList.add('opacity-40', 'select-none', 'pointer-events-none');
+                pzField.disabled = true;
+                pzField.required = false;
+                pzField.value = ""; // Reset
+                pzField.classList.remove('border-rose-400', 'bg-rose-50/20');
             }
         }
 
-        // Toggle Co-titular layout dynamically (Fixed elements selectors)
+        // Toggle Paz y Salvo requirements based on Colombia Moras Sector
+        function togglePazSalvoField(sector) {
+            // Field properties are synchronized natively inside toggleMoraSector
+        }
+
+        // Toggle Collections Fields (EEUU) smoothly
+        function toggleCollectionsFields(show) {
+            const containers = ['coll_med_container', 'coll_no_med_qty_container', 'coll_no_med_val_container'];
+            const inputs = ['p1_collections_medicas', 'p1_collections_no_medicas_qty', 'p1_collections_no_medicas_val'];
+            
+            containers.forEach((cid, index) => {
+                const containerEl = document.getElementById(cid);
+                const inputEl = document.getElementById(inputs[index]);
+                if (show) {
+                    containerEl.classList.remove('opacity-40', 'select-none', 'pointer-events-none');
+                    inputEl.disabled = false;
+                    inputEl.required = true;
+                } else {
+                    containerEl.classList.add('opacity-40', 'select-none', 'pointer-events-none');
+                    inputEl.disabled = true;
+                    inputEl.required = false;
+                    inputEl.value = ""; // Reset value
+                    inputEl.classList.remove('border-rose-400', 'bg-rose-50/20');
+                }
+            });
+        }
+
+        // Toggle Co-titular layout dynamically
         function toggleCotitularNode(isActive) {
             requiresCotitular = isActive;
             if (isActive) {
@@ -723,6 +868,7 @@
             goToStep(currentStep); // Refresh step nodes classes
         }
 
+        // Apply mandatory validation constraints
         function setFieldsRequired(containerId, isRequired) {
             const container = document.getElementById(containerId);
             const inputs = container.querySelectorAll('input, select');
@@ -781,8 +927,8 @@
         // Input validation per Step
         function validateAndGoToStep(nextStep) {
             if (nextStep === 2) {
-                // Validate Step 1 Inputs (Added birthdate to validation)
-                const fields = ['p1_primer_nombre', 'p1_apellidos', 'p1_cc', 'p1_fecha_nacimiento', 'p1_actividad', 'p1_ingresos', 'p1_pais', 'p1_score', 'p1_fecha_ingreso', 'p1_estatus_migratorio'];
+                // Validate Step 1 Inputs (Added birthdate & email to validation array)
+                const fields = ['p1_primer_nombre', 'p1_apellidos', 'p1_cc', 'p1_fecha_nacimiento', 'p1_email', 'p1_actividad', 'p1_ingresos', 'p1_pais', 'p1_score', 'p1_fecha_ingreso', 'p1_estatus_migratorio'];
                 let isValid = true;
                 fields.forEach(id => {
                     const el = document.getElementById(id);
@@ -794,8 +940,18 @@
                     }
                 });
 
+                // Simple email pattern check
+                const emailEl = document.getElementById('p1_email');
+                if (emailEl && emailEl.value !== "") {
+                    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    if (!emailPattern.test(emailEl.value)) {
+                        emailEl.classList.add('border-rose-400', 'bg-rose-50/20');
+                        isValid = false;
+                    }
+                }
+
                 if (!isValid) {
-                    showModal("Campos Incompletos", "Hay campos requeridos de datos personales, fecha de nacimiento o radicación en el exterior sin diligenciar.");
+                    showModal("Campos Incompletos / Erróneos", "Hay campos requeridos de datos personales, fecha de nacimiento, correo electrónico o radicación en el exterior sin diligenciar correctamente.");
                     return;
                 }
                 goToStep(2);
@@ -818,12 +974,36 @@
                 const moraColVal = document.querySelector('input[name="p1_mora_colombia"]:checked').value;
                 if (moraColVal === 'si') {
                     const sectorField = document.getElementById('p1_mora_sector');
+                    const pazSalvoField = document.getElementById('p1_mora_paz_salvo');
+                    
                     if (!sectorField.value) {
                         sectorField.classList.add('border-rose-400', 'bg-rose-50/20');
                         isValid = false;
                     } else {
                         sectorField.classList.remove('border-rose-400', 'bg-rose-50/20');
                     }
+
+                    if (!pazSalvoField.value) {
+                        pazSalvoField.classList.add('border-rose-400', 'bg-rose-50/20');
+                        isValid = false;
+                    } else {
+                        pazSalvoField.classList.remove('border-rose-400', 'bg-rose-50/20');
+                    }
+                }
+
+                // Conditional validation for EEUU Collections
+                const collVal = document.querySelector('input[name="p1_mora_exterior"]:checked').value;
+                if (collVal === 'si') {
+                    const colFields = ['p1_collections_medicas', 'p1_collections_no_medicas_qty', 'p1_collections_no_medicas_val'];
+                    colFields.forEach(id => {
+                        const el = document.getElementById(id);
+                        if (!el || el.value === "") {
+                            if(el) el.classList.add('border-rose-400', 'bg-rose-50/20');
+                            isValid = false;
+                        } else {
+                            if(el) el.classList.remove('border-rose-400', 'bg-rose-50/20');
+                        }
+                    });
                 }
 
                 // Validation of Centrales Authorization
@@ -852,19 +1032,30 @@
             }
         }
 
+        // Navigation back logic to modify previously filled values without clearing state
+        // Si el co-titular está activo, regresa al paso 3, de lo contrario al paso 2.
+        function goBackToForm() {
+            if (requiresCotitular) {
+                goToStep(3);
+            } else {
+                goToStep(2);
+            }
+            lucide.createIcons();
+        }
+
         // Logic for decision engine simulation
         function submitSimulation() {
-            // If requires cotitular, validate step 3 fields first
+            // If requires cotitular, validate step 3 fields first (Symmetric 8 fields validation)
             if (requiresCotitular) {
-                const fields = ['p2_primer_nombre', 'p2_apellidos', 'p2_cc', 'p2_actividad', 'p2_ingresos', 'p2_egresos', 'p2_pais', 'p2_score', 'p2_fecha_ingreso', 'p2_estatus'];
+                const fields = ['p2_primer_nombre', 'p2_apellidos', 'p2_cc', 'p2_fecha_nacimiento', 'p2_actividad', 'p2_ingresos', 'p2_egresos', 'p2_pais', 'p2_score', 'p2_fecha_ingreso', 'p2_estatus'];
                 let isValid = true;
                 fields.forEach(id => {
                     const el = document.getElementById(id);
-                    if (!el.value) {
-                        el.classList.add('border-rose-400', 'bg-rose-50/20');
+                    if (!el || el.value === "") {
+                        if (el) el.classList.add('border-rose-400', 'bg-rose-50/20');
                         isValid = false;
                     } else {
-                        el.classList.remove('border-rose-400', 'bg-rose-50/20');
+                        if (el) el.classList.remove('border-rose-400', 'bg-rose-50/20');
                     }
                 });
 
@@ -877,40 +1068,66 @@
             calculateEngineResults();
         }
 
-        // Core Credit Engine Rules with Corrected Outlays (Egresos) Capacity Formula
+        // Core Credit Engine Rules with Corrected Outlays (Egresos) Capacity Formula & Exact Bank Rules
         function calculateEngineResults() {
-            // Gather inputs
-            const p1_nombre = document.getElementById('p1_primer_nombre').value + ' ' + document.getElementById('p1_apellidos').value;
+            const TRM = 4000;
+
+            // Gather inputs (Solicitante 1)
+            const p1_nombre = (document.getElementById('p1_primer_nombre').value + ' ' + (document.getElementById('p1_segundo_nombre').value ? document.getElementById('p1_segundo_nombre').value + ' ' : '') + document.getElementById('p1_apellidos').value).trim();
             const p1_ingresos = parseFloat(document.getElementById('p1_ingresos').value);
             const p1_score = parseInt(document.getElementById('p1_score').value);
             const p1_estatus = document.getElementById('p1_estatus_migratorio').value;
+            const p1_dob = document.getElementById('p1_fecha_nacimiento').value;
+            const p1_actividad = document.getElementById('p1_actividad').value;
+            const p1_pais = document.getElementById('p1_pais').value;
+            const p1_stay_months = calculateAgeInMonths(document.getElementById('p1_fecha_ingreso').value);
 
-            // Gather Credit History inputs
+            // Gather Credit History inputs (Colombia)
             const p1_mora_colombia = document.querySelector('input[name="p1_mora_colombia"]:checked').value;
             const p1_mora_sector = document.getElementById('p1_mora_sector').value;
+            const p1_mora_paz_salvo = document.getElementById('p1_mora_paz_salvo').value;
+
+            // Gather Credit History inputs (EEUU Collections)
             const p1_mora_exterior = document.querySelector('input[name="p1_mora_exterior"]:checked').value;
+            const p1_collections_medicas_USD = parseFloat(document.getElementById('p1_collections_medicas').value) || 0;
+            const p1_collections_no_medicas_qty = parseInt(document.getElementById('p1_collections_no_medicas_qty').value) || 0;
+            const p1_collections_no_medicas_USD = parseFloat(document.getElementById('p1_collections_no_medicas_val').value) || 0;
 
             // Gather Outlays
+            const p1_cupo_tarjetas = parseFloat(document.getElementById('p1_cupo_tarjetas').value) || 0;
             const p1_cuota_tarjetas = parseFloat(document.getElementById('p1_cuota_tarjetas').value) || 0;
             const p1_otros_creditos = parseFloat(document.getElementById('p1_otros_creditos').value) || 0;
-            const total_egresos_mensuales = p1_cuota_tarjetas + p1_otros_creditos;
+            const total_egresos_mensuales_p1 = p1_cuota_tarjetas + p1_otros_creditos;
 
-            let total_ingresos = p1_ingresos;
+            let total_ingresos_brutos = p1_ingresos;
             let score_final = p1_score;
             let estatus_critico = p1_estatus;
-            let egresos_totales = total_egresos_mensuales;
+            let egresos_totales_Estudio = total_egresos_mensuales_p1;
+
+            // Age calculations in months for precise parsing
+            const p1_age_months = calculateAgeInMonths(p1_dob);
 
             let p2_nombre = "";
+            let p2_age_months = null;
+            let p2_ingresos = 0;
+            let p2_egresos = 0;
+            let p2_actividad = "";
+            let p2_dob = null;
+            let p2_estatus = "";
+            let p2_stay_months = null;
             if (requiresCotitular) {
-                const p2_ingresos = parseFloat(document.getElementById('p2_ingresos').value) || 0;
-                const p2_score = parseInt(document.getElementById('p2_score').value) || 0;
-                const p2_estatus = document.getElementById('p2_estatus').value;
-                const p2_egresos = parseFloat(document.getElementById('p2_egresos').value) || 0;
-                p2_nombre = document.getElementById('p2_primer_nombre').value + ' ' + document.getElementById('p2_apellidos').value;
+                p2_ingresos = parseFloat(document.getElementById('p2_ingresos').value) || 0;
+                p2_egresos = parseFloat(document.getElementById('p2_egresos').value) || 0;
+                p2_dob = document.getElementById('p2_fecha_nacimiento').value;
+                p2_actividad = document.getElementById('p2_actividad').value;
+                p2_estatus = document.getElementById('p2_estatus').value;
+                p2_nombre = (document.getElementById('p2_primer_nombre').value + ' ' + (document.getElementById('p2_segundo_nombre').value ? document.getElementById('p2_segundo_nombre').value + ' ' : '') + document.getElementById('p2_apellidos').value).trim();
+                p2_age_months = calculateAgeInMonths(p2_dob);
+                p2_stay_months = calculateAgeInMonths(document.getElementById('p2_fecha_ingreso').value);
 
-                total_ingresos += p2_ingresos;
-                egresos_totales += p2_egresos;
-                score_final = Math.round((p1_score + p2_score) / 2);
+                total_ingresos_brutos += p2_ingresos;
+                egresos_totales_Estudio += p2_egresos;
+                score_final = Math.round((p1_score + parseInt(document.getElementById('p2_score').value || p1_score)) / 2);
                 
                 if (p1_estatus === 'sin_estatus' || p2_estatus === 'sin_estatus') {
                     estatus_critico = 'sin_estatus';
@@ -918,11 +1135,235 @@
             }
 
             // CORRECT FORMULA: 
-            const max_cuota_hipotecaria_legal = total_ingresos * 0.40; // 40% Colombian Housing Law limit
-            const disponible_efectivo = Math.max(0, total_ingresos - egresos_totales); // Real disposable cash flow
+            const max_cuota_hipotecaria_legal = total_ingresos_brutos * 0.40; // 40% Legal cap
+            const disponible_efectivo = Math.max(0, total_ingresos_brutos - egresos_totales_Estudio); // Real disposable cash flow
 
             // The absolute capacity limit is the lesser of the legal 40% limit and the remaining cash flow
             const ingresos_netos_disponibles = Math.max(0, Math.min(max_cuota_hipotecaria_legal, disponible_efectivo));
+
+            // Dynamic calculation of probabilities for all allied banks (Moved to top of evaluation to avoid scoping ReferenceErrors)
+            const bankCalculations = bankRules.map(bank => {
+                let probability = 0;
+                let status = "No Elegible";
+                let reason = "";
+                let maxHipotecarioSugerido = 0;
+                let isViable = true;
+
+                // 1. Age verification
+                const p1_age_ok = p1_age_months >= (bank.minAge * 12) && p1_age_months <= bank.maxAgeMonths;
+                let p2_age_ok = true;
+                if (requiresCotitular) {
+                    p2_age_ok = p2_age_months >= (bank.minAge * 12) && p2_age_months <= bank.maxAgeMonths;
+                }
+
+                if (!p1_age_ok || !p2_age_ok) {
+                    isViable = false;
+                    reason = "Fuera de rango de edad institucional";
+                }
+
+                // 2. Minimum Income & Minimum Stay verification
+                if (isViable) {
+                    if (bank.name === "Bancolombia") {
+                        if (p1_pais === "EEUU" && p1_ingresos < 7528892) {
+                            isViable = false;
+                            reason = "Ingresos < 4.3 SMMLV ($7.528.892 COP) para EEUU";
+                        }
+                        if (p1_stay_months < 24 || (requiresCotitular && p2_stay_months < 24)) {
+                            isViable = false;
+                            reason = "Permanencia menor a 24 meses requerida";
+                        }
+                    } else if (bank.name === "Davivienda") {
+                        if (p1_ingresos < 1750905) {
+                            isViable = false;
+                            reason = "Ingresos menores a 1 SMMLV ($1.750.905 COP)";
+                        }
+                        const req_stay_d = (p1_pais === "EEUU") ? 12 : 24;
+                        if (p1_stay_months < req_stay_d || (requiresCotitular && p2_stay_months < req_stay_d)) {
+                            isViable = false;
+                            reason = `Permanencia mínima requerida es de ${req_stay_d} meses`;
+                        }
+                    } else if (bank.name === "Banco Unión") {
+                        if ((p1_ingresos / TRM) < 1500) {
+                            isViable = false;
+                            reason = "Ingresos mensuales menores a USD 1,500";
+                        }
+                        const req_stay_u = (p1_estatus !== "sin_estatus") ? 12 : 24;
+                        const p2_req_stay_u = (requiresCotitular && p2_estatus !== "sin_estatus") ? 12 : 24;
+                        if (p1_stay_months < req_stay_u || (requiresCotitular && p2_stay_months < p2_req_stay_u)) {
+                            isViable = false;
+                            reason = `Permanencia requerida según estatus es de ${req_stay_u} meses`;
+                        }
+                    }
+                }
+
+                // 3. NEW IMMIGRATION STATUS VALIDATION RULES
+                if (isViable) {
+                    if (bank.name === "Bancolombia") {
+                        if (p1_estatus === "licencia_temporal" || p1_estatus === "sin_estatus") {
+                            isViable = false;
+                            reason = "Bancolombia: Estatus temporal o no regularizado no elegible.";
+                        }
+                        if (requiresCotitular && (p2_estatus === "licencia_temporal" || p2_estatus === "sin_estatus")) {
+                            isViable = false;
+                            reason = "Co-titular: Estatus migratorio temporal o no regularizado no elegible para Bancolombia.";
+                        }
+                    } else if (bank.name === "Davivienda") {
+                        if (p1_estatus === "sin_estatus") {
+                            isViable = false;
+                            reason = "Davivienda: Estatus no regularizado no elegible.";
+                        }
+                        if (requiresCotitular && p2_estatus === "sin_estatus") {
+                            isViable = false;
+                            reason = "Co-titular: Estatus migratorio no regularizado no elegible para Davivienda.";
+                        }
+                    }
+                    // Banco Unión accepts all profiles, even sin_estatus (stay requirements checked on step 2)
+                }
+
+                // 4. Credit Scores and Delinquencies Check
+                if (isViable) {
+                    if (bank.name === "Bancolombia") {
+                        if (p1_score !== 0 && p1_score < 600) {
+                            isViable = false;
+                            reason = "Score crediticio menor a 600 puntos";
+                        }
+                        if (p1_mora_colombia === "si") {
+                            if (p1_mora_sector === "financiero") { isViable = false; reason = "Rechazo de moras del sector financiero"; }
+                            if (p1_mora_sector === "real" && p1_mora_paz_salvo === "no") { isViable = false; reason = "Sector real requiere Paz y Salvo"; }
+                        }
+                        if (p1_mora_exterior === "si") {
+                            const p1_comp_check = p1_ingresos * (p1_actividad === "empleado" ? 0.90 : 0.70);
+                            if ((p1_collections_medicas_USD * TRM) > (p1_comp_check * 0.50)) { isViable = false; reason = "Collections médicas exceden 50% de ingresos"; }
+                            if (p1_collections_no_medicas_qty > 1) { isViable = false; reason = "Excede cupo máximo de 1 collection no médica"; }
+                            if ((p1_collections_no_medicas_USD * TRM) > (p1_comp_check * 0.50)) { isViable = false; reason = "Collection no médica excede 50% de ingresos"; }
+                        }
+                    } else if (bank.name === "Davivienda") {
+                        if (p1_score < 600) {
+                            isViable = false;
+                            reason = "Score crediticio inferior a 600";
+                        }
+                        if (p1_mora_colombia === "si") {
+                            isViable = false;
+                            reason = "Rechazo estricto de moras en Colombia";
+                        }
+                    } else if (bank.name === "Banco Unión") {
+                        if (p1_mora_colombia === "si" && p1_mora_paz_salvo === "no") {
+                            isViable = false;
+                            reason = "Requiere Paz y Salvo para saneamiento en Colombia";
+                        }
+                        const total_coll_USD = p1_collections_medicas_USD + p1_collections_no_medicas_USD;
+                        if (p1_mora_exterior === "si" && total_coll_USD > 1500) {
+                            status = "Revisión"; // Set manual review conditional tag
+                        }
+                    }
+                }
+
+                // 5. Computable income and Outlays calculations
+                if (isViable) {
+                    let computableIncome = 0;
+                    let calculatedEgresos = 0;
+
+                    if (bank.name === "Bancolombia") {
+                        const p1_c = p1_ingresos * (p1_actividad === "empleado" ? 0.90 : 0.70);
+                        const p2_c = requiresCotitular ? (p2_ingresos * (p2_actividad === "empleado" ? 0.90 : 0.70)) : 0;
+                        computableIncome = p1_c + p2_c;
+                        calculatedEgresos = (200 * TRM) + (p1_cupo_tarjetas * 0.03) + p1_otros_creditos + p2_egresos;
+                    } else if (bank.name === "Davivienda") {
+                        const p1_c = p1_ingresos * (p1_actividad === "empleado" ? 0.90 : 0.50);
+                        const p2_c = requiresCotitular ? (p2_ingresos * (p2_actividad === "empleado" ? 0.90 : 0.50)) : 0;
+                        computableIncome = p1_c + p2_c;
+                        calculatedEgresos = (200 * TRM) + p1_otros_creditos + p2_egresos;
+                    } else if (bank.name === "Banco Unión") {
+                        const p1_c = p1_ingresos * (p1_actividad === "empleado" ? 0.90 : 0.50);
+                        const p2_c = requiresCotitular ? (p2_ingresos * (p2_actividad === "empleado" ? 0.90 : 0.50)) : 0;
+                        computableIncome = p1_c + p2_c;
+                        calculatedEgresos = (total_ingresos_brutos * 0.35) + (p1_cupo_tarjetas * 0.035) + p1_otros_creditos + p2_egresos;
+                    }
+
+                    const maxCuotaLimit = computableIncome * 0.40;
+                    const cashAvailable = Math.max(0, computableIncome - calculatedEgresos);
+                    
+                    let cuotaViableBase = Math.min(maxCuotaLimit, cashAvailable);
+                    if (bank.name === "Banco Unión") {
+                        cuotaViableBase = Math.min(maxCuotaLimit, cashAvailable / 1.015);
+                    }
+
+                    // Financial Leverage computation using Present value factor
+                    const i_monthly = (1 + parseFloat(bank.rate) / 100) ** (1 / 12) - 1;
+                    const pv_factor = (1 - (1 + i_monthly) ** (-bank.term)) / i_monthly;
+                    
+                    let projectedLoan = cuotaViableBase * pv_factor;
+
+                    if (projectedLoan < 40000000) {
+                        isViable = false;
+                        reason = "Capacidad de cuota proyecta crédito menor al mínimo operativo ($40M COP)";
+                    } else {
+                        // Apply Cap rules
+                        montoMaximoFinal = Math.min(projectedLoan, bank.maxAmount);
+                        // RECALCULATE EXACT MONTHLY INSTALMENT FROM THE FINAL LOAN VALUE
+                        cuotaMensualEstimada = montoMaximoFinal / pv_factor;
+                        
+                        // 6. Probability scoring incorporating Credit Scores & Immigration Status
+                        if (status !== "Revisión") {
+                            status = "Alta";
+                            
+                            // Base score evaluation
+                            if (p1_score === 0 && bank.name === "Bancolombia") {
+                                probability = 75; status = "Media";
+                            } else if (p1_score >= 720) probability = 95;
+                            else if (p1_score >= 660) probability = 85;
+                            else { probability = 70; status = "Media"; }
+
+                            // Apply Immigration Status Modifiers (Adjusting affinity/probability as per requested rules)
+                            if (bank.name === "Bancolombia") {
+                                if (p1_estatus === "permiso_trabajo") {
+                                    probability = Math.max(40, probability - 20); // Compatible condicionado, menor probabilidad
+                                    status = "Media";
+                                    reason = "Requiere enviar Social y documento que demuestre dos años en el exterior (I-94)";
+                                }
+                            } else if (bank.name === "Davivienda") {
+                                if (p1_estatus === "permiso_trabajo" || p1_estatus === "licencia_temporal") {
+                                    probability = Math.max(40, probability - 15); // Compatible, pero de afinidad media
+                                    status = "Media";
+                                }
+                            } else if (bank.name === "Banco Unión") {
+                                if (p1_estatus === "sin_estatus") {
+                                    probability = 65; // Compatible but lower score affinity
+                                    status = "Media";
+                                }
+                            }
+
+                            // Penalize for Mora Real (minor debt)
+                            if (p1_mora_colombia === 'si' && p1_mora_sector === 'real') {
+                                probability = Math.max(10, probability - 25);
+                                status = "Baja";
+                            }
+
+                            // Penalize for low disposable income
+                            if (disponible_efectivo < 1500000) {
+                                probability = Math.max(10, probability - 20);
+                                if (probability < 40) status = "Baja";
+                                else if (probability < 75) status = "Media";
+                            }
+                        } else {
+                            probability = 50; // Conditional manual evaluation rule
+                        }
+                    }
+                }
+
+                return {
+                    name: bank.name,
+                    isViable: isViable,
+                    reason: reason,
+                    logo: bank.logo,
+                    probability: isViable ? probability : 0,
+                    status: isViable ? status : "No Elegible",
+                    maxAmount: isViable ? Math.round(montoMaximoFinal) : 0,
+                    rate: bank.rate,
+                    term: bank.term,
+                    cuotaViable: isViable ? Math.round(cuotaMensualEstimada) : 0
+                };
+            });
 
             // Decision Matrix logic
             let approved = true;
@@ -931,114 +1372,133 @@
             let monto_maximo = 0;
             let plazo_meses = 0;
             let tasa_anual = "";
+            let selectedBank = null;
 
-            // Evaluate Credit history risks (Top priority block)
-            if (p1_mora_exterior === 'si') {
+            // Filter Banks by Age rules first
+            const eligibleBanksByAge = bankRules.filter(b => {
+                const p1_ok = p1_age_months >= (b.minAge * 12) && b.maxAgeMonths >= p1_age_months;
+                if (requiresCotitular) {
+                    const p2_ok = p2_age_months >= (b.minAge * 12) && b.maxAgeMonths >= p2_age_months;
+                    return p1_ok && p2_ok;
+                }
+                return p1_ok;
+            });
+
+            // Evaluation chain
+            if (eligibleBanksByAge.length === 0) {
+                approved = false;
+                reject_reason = "edad_fuera_rango";
+            } else if (p1_mora_exterior === 'si') {
                 approved = false;
                 reject_reason = "collections_exterior";
             } else if (p1_mora_colombia === 'si' && p1_mora_sector === 'financiero') {
                 approved = false;
                 reject_reason = "mora_financiera_colombia";
-            } else if (score_final < 580) {
-                approved = false;
-                reject_reason = "score_bajo";
-            } else if (estatus_critico === 'sin_estatus' && score_final < 650) {
-                approved = false;
-                reject_reason = "sin_estatus_regulado";
-            } else if (total_ingresos < 3000000) {
+            } else if (total_ingresos_brutos < 3000000) {
                 approved = false;
                 reject_reason = "ingresos_insuficientes";
-            } else if (ingresos_netos_disponibles < 600000) { // If final cuota capacity is less than 600.000 COP, capacity is insufficient
-                approved = false;
-                reject_reason = "capacidad_endeudamiento_insuficiente";
             }
 
-            // Assign entities and terms if passed
-            if (approved) {
-                // Determine capacity multiplier. If real sector mora is present, we adjust limits for caution
-                let limit_factor = 45;
-                if (p1_mora_colombia === 'si' && p1_mora_sector === 'real') {
-                    limit_factor = 25; // Capped capacity due to active small debt
-                }
+            // Filter eligible banks based on credit score and immigration rules
+            const finalEligibleBanks = bankCalculations.filter(b => b.isViable);
+            
+            if (approved && finalEligibleBanks.length === 0) {
+                approved = false;
+                // Detect specific rejection category to display proper roadmap
+                const b_imm_fail = p1_estatus === "sin_estatus";
+                if (b_imm_fail) reject_reason = "sin_estatus_regulado";
+                else reject_reason = "capacidad_endeudamiento_insuficiente";
+            }
 
-                // Leverage calculation: we multiply the corrected cuota capacity by a standard bank leveraging factor (approx. 110 times the monthly payment capacity)
-                let capacity_multiplier = 110; 
-                if (p1_mora_colombia === 'si' && p1_mora_sector === 'real') {
-                    capacity_multiplier = 80; 
-                }
-
-                monto_maximo = Math.round(ingresos_netos_disponibles * capacity_multiplier);
-
-                // Caps based on bank scoring and rating
-                if (score_final >= 740 && limit_factor > 25) {
-                    financial_entity = "Bancolombia";
-                    monto_maximo = Math.min(monto_maximo, 600000000); 
-                    plazo_meses = 240; // 20 years
-                    tasa_anual = "12.8% E.A.";
-                } else if (score_final >= 660 && limit_factor > 25) {
-                    financial_entity = "Davivienda";
-                    monto_maximo = Math.min(monto_maximo, 450000000);
-                    plazo_meses = 180; // 15 years
-                    tasa_anual = "13.5% E.A.";
-                } else {
-                    financial_entity = "Banco Unión";
-                    monto_maximo = Math.min(monto_maximo, 250000000);
-                    plazo_meses = 120; // 10 years
-                    tasa_anual = "15.2% E.A.";
-                }
+            // Assign standard maximum leverage terms if approved
+            if (approved && finalEligibleBanks.length > 0) {
+                // Sort by score requirements descending to assign the premier option
+                finalEligibleBanks.sort((a, b) => b.probability - a.probability || b.maxAmount - a.maxAmount);
+                selectedBank = finalEligibleBanks[0];
+                financial_entity = selectedBank.name;
+                plazo_meses = selectedBank.term;
+                tasa_anual = selectedBank.rate;
+                monto_maximo = selectedBank.maxAmount;
                 
-                // Enforce minimum loan check (50 Million COP)
-                if (monto_maximo < 50000000) {
-                    approved = false;
-                    reject_reason = "capacidad_endeudamiento_insuficiente";
-                    displayRejection(reject_reason, p1_nombre, p2_nombre, score_final, total_ingresos, egresos_totales);
-                } else {
-                    displayApproval(financial_entity, monto_maximo, plazo_meses, tasa_anual, p1_nombre, p2_nombre, p1_mora_colombia === 'si', ingresos_netos_disponibles);
-                }
+                displayApproval(financial_entity, monto_maximo, plazo_meses, tasa_anual, p1_nombre, p2_nombre, p1_mora_colombia === 'si', selectedBank.cuotaViable, selectedBank.logo, bankCalculations);
             } else {
-                displayRejection(reject_reason, p1_nombre, p2_nombre, score_final, total_ingresos, egresos_totales);
+                displayRejection(reject_reason, p1_nombre, p2_nombre, p1_score, total_ingresos_brutos, egresos_totales_Estudio);
             }
 
             // Progress to final results step display (step-content-4)
             goToStep(4);
         }
 
-        // Instant Rejection for NO authorization
-        function displayInstantRejection(type) {
-            const container = document.getElementById('result-payload');
-            container.innerHTML = `
-                <div class="space-y-6 text-center py-6">
-                    <div class="w-16 h-16 rounded-full bg-rose-50 text-rose-600 flex items-center justify-center mx-auto shadow-md animate-pulse">
-                        <i data-lucide="shield-alert" class="w-8 h-8"></i>
-                    </div>
-                    <h3 class="font-serif text-2xl font-extrabold text-viventa-black">PROCESO PAUSADO - REQUISITO DE LEY</h3>
-                    <p class="text-viventa-grayb text-sm max-w-xl mx-auto leading-relaxed font-semibold">
-                        Los bancos aliados en Colombia exigen de manera estricta y obligatoria la autorización de consulta en centrales firmada físicamente por el cliente. Sin este documento, las políticas internas de radicación bloquean la simulación.
-                    </p>
-                    <div class="flex justify-center pt-2">
-                        <button type="button" onclick="goToStep(2)" class="px-5 h-[52px] bg-viventa-black hover:bg-slate-800 text-white rounded-xl text-xs font-bold transition-all flex items-center justify-center">
-                            Regresar y Adjuntar Autorización
-                        </button>
-                    </div>
-                </div>
-            `;
-            goToStep(4);
-            lucide.createIcons();
-        }
-
-        // Render Pre-Approval UI
-        function displayApproval(bank, amount, term, rate, name1, name2, hasMoraReal, cuotaDisponible) {
+        // Render Pre-Approval UI (Visualizing Probability for Allied Banks with distinct automated calculated instalments)
+        function displayApproval(bank, amount, term, rate, name1, name2, hasMoraReal, cuotaDisponible, bankIcon, eligibleBanks) {
             const container = document.getElementById('result-payload');
             const copFormatter = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 });
 
-            let bankLogo = "🏦";
-            if (bank === "Bancolombia") {
-                bankLogo = "💛";
-            } else if (bank === "Davivienda") {
-                bankLogo = "❤️";
-            } else {
-                bankLogo = "💙";
-            }
+            // Store in cache for PDF generation
+            cachedApprovalData = {
+                bank: bank,
+                amount: amount,
+                term: term,
+                rate: rate,
+                name1: name1,
+                name2: name2,
+                hasMoraReal: hasMoraReal,
+                cuotaDisponible: cuotaDisponible,
+                eligibleBanks: eligibleBanks
+            };
+
+            // Build HTML list of all allied banks with their approval probabilities
+            let banksListHTML = `<div class="space-y-3.5">`;
+            
+            eligibleBanks.forEach(b => {
+                let badgeClass = "bg-slate-100 text-slate-600";
+                let barColorClass = "bg-slate-300";
+                
+                if (b.status === "Alta") {
+                    badgeClass = "bg-emerald-50 text-emerald-700 border border-emerald-200";
+                    barColorClass = "bg-viventa-mist";
+                } else if (b.status === "Media" || b.status === "Revisión") {
+                    badgeClass = "bg-amber-50 text-amber-700 border border-amber-200";
+                    barColorClass = "bg-viventa-purple";
+                } else if (b.status === "Baja") {
+                    badgeClass = "bg-rose-50 text-rose-700 border border-rose-200";
+                    barColorClass = "bg-viventa-magenta";
+                } else {
+                    badgeClass = "bg-slate-100 text-slate-400 border border-slate-200";
+                    barColorClass = "bg-slate-200";
+                }
+
+                banksListHTML += `
+                    <div class="bg-slate-50 border border-slate-100 rounded-xl p-3.5 space-y-2.5">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <span class="text-base">${b.logo}</span>
+                                <span class="text-xs font-extrabold text-viventa-black">${b.name}</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="text-xs font-bold text-slate-600">${b.isViable ? b.probability + '% Probabilidad' : 'No Viable'}</span>
+                                <span class="text-[9px] px-2 py-0.5 rounded-full font-black uppercase ${badgeClass}">${b.status}</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Mini Bar progress -->
+                        <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+                            <div class="h-full ${barColorClass} transition-all duration-300" style="width: ${b.probability}%"></div>
+                        </div>
+                        
+                        ${b.reason ? `<span class="text-[9px] text-rose-500 font-bold block">* ${b.reason}</span>` : ''}
+                        
+                        ${b.isViable ? `
+                        <div class="grid grid-cols-3 gap-2 pt-1 text-[11px] text-slate-600 font-medium">
+                            <div>Crédito Máx: <strong class="text-slate-900 block">${copFormatter.format(b.maxAmount)}</strong></div>
+                            <div>Plazo Máx: <strong class="text-slate-900 block">${b.term / 12} años</strong></div>
+                            <div>Cuota Mensual: <strong class="text-viventa-magenta block">${copFormatter.format(b.cuotaViable)}</strong></div>
+                        </div>
+                        ` : ''}
+                    </div>
+                `;
+            });
+            banksListHTML += `</div>`;
 
             container.innerHTML = `
                 <div class="space-y-6 animate-in fade-in duration-500">
@@ -1046,63 +1506,61 @@
                         <div class="w-12 h-12 rounded-full bg-viventa-lightgreen/50 text-emerald-700 flex items-center justify-center mx-auto shadow-sm">
                             <i data-lucide="check-circle" class="w-6 h-6"></i>
                         </div>
-                        <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-600">VIABILIDAD PRE-APROBADA EXITOSA</span>
-                        <h3 class="font-serif text-2xl font-extrabold text-viventa-black">Cifras Consolidadas de la Operación</h3>
+                        <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-600">ESTUDIO DE VIABILIDAD CONCLUIDO</span>
                     </div>
 
                     ${hasMoraReal ? `
                     <div class="bg-amber-50 border border-amber-200 text-amber-900 rounded-xl p-4 text-xs font-semibold">
-                        ⚠️ <strong class="text-slate-900">Alerta:</strong> El cliente registra moras menores en el Sector Real. Aunque el banco permite continuar, hemos aplicado un margen de capacidad conservadora. Sugerimos exigir el soporte de pago.
+                        ⚠️ <strong class="text-slate-900">Alerta de Mora Real:</strong> El cliente registra moras menores en el Sector Real de Colombia. Aunque el perfil es viable en general, hemos aplicado un margen de capacidad de amortización conservadora.
                     </div>
                     ` : ''}
 
-                    <!-- CARD FINANCIAL DETAIL FOR AGENT -->
+                    <!-- ALLIED BANKS PROBABILITY BREAKDOWN -->
+                    <div class="border border-slate-100 rounded-2xl p-5 bg-white shadow-sm space-y-4">
+                        <h4 class="text-xs font-extrabold text-viventa-black uppercase tracking-wider flex items-center gap-2 border-b border-slate-100 pb-2">
+                            <i data-lucide="bar-chart-3" class="w-4 h-4 text-viventa-magenta"></i>
+                            Análisis de Financiación Hipotecaria por Entidad
+                        </h4>
+                        ${banksListHTML}
+                    </div>
+
+                    <!-- ESTIMATED TERMS SUMMARIZED CARD -->
                     <div class="bg-gradient-to-tr from-viventa-black to-[#484e75] text-white rounded-3xl p-6 relative overflow-hidden border border-slate-700 shadow-md">
+                        <div class="absolute -right-10 -bottom-10 opacity-10 text-[120px]">🏠</div>
                         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-white/10 pb-4">
                             <div>
-                                <span class="text-[9px] uppercase tracking-widest text-slate-300 font-bold block">Entidad Asignada por Scoring</span>
+                                <span class="text-[9px] uppercase tracking-widest text-slate-300 font-bold block">Estructuración Global de la Operación</span>
                                 <div class="flex items-center gap-2 mt-1">
-                                    <span class="text-lg">${bankLogo}</span>
-                                    <h4 class="text-xl font-extrabold text-white">${bank}</h4>
+                                    <span class="text-lg">🏠</span>
+                                    <h4 class="text-xl font-extrabold text-white">Financiación Estimada de Vivienda</h4>
                                 </div>
                             </div>
                             <div class="px-3 py-1 bg-viventa-magenta text-white rounded-lg text-xs font-bold">
-                                Radicación Exterior Activa
+                                Estudio Viable
                             </div>
                         </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4 text-xs">
                             <div>
-                                <span class="text-slate-400 block font-bold uppercase text-[9px]">Monto Hipotecario Sugerido</span>
+                                <span class="text-slate-400 block font-bold uppercase text-[9px]">Monto Máximo Sugerido</span>
                                 <span class="text-xl md:text-2xl font-black mt-1 text-viventa-pink block">${copFormatter.format(amount)}</span>
                             </div>
                             <div>
-                                <span class="text-slate-400 block font-bold uppercase text-[9px]">Plazo Seleccionado</span>
-                                <span class="text-base font-bold mt-1 text-white block">${term} meses (${term/12} años)</span>
+                                <span class="text-slate-400 block font-bold uppercase text-[9px]">Plazo Promedio</span>
+                                <span class="text-base font-bold mt-1 text-white block">240 meses (20 años)</span>
                             </div>
                             <div>
-                                <span class="text-slate-400 block font-bold uppercase text-[9px]">Tasa Referencial E.A.</span>
+                                <span class="text-slate-400 block font-bold uppercase text-[9px]">Tasa de Convenio Estimada</span>
                                 <span class="text-base font-bold mt-1 text-viventa-mist block">${rate}</span>
                             </div>
                         </div>
                     </div>
 
-                    <!-- AGENT ANALYTIC SUMMARY -->
-                    <div class="border border-viventa-grayb/20 rounded-xl p-4 bg-slate-50 space-y-3">
-                        <h5 class="text-xs font-bold text-viventa-black uppercase tracking-wider flex items-center gap-2">
-                            <i data-lucide="bar-chart-2" class="w-4 h-4 text-viventa-magenta"></i>
-                            Análisis Técnico para Radicación (Comercial)
-                        </h5>
-                        <p class="text-xs text-viventa-grayb leading-relaxed font-semibold">
-                            La capacidad de cuota mensual del cliente libre para amortización es de <span class="text-slate-900 font-extrabold">${copFormatter.format(cuotaDisponible)} COP</span>. Cumple a cabalidad la relación cuota-ingreso estipulada en la ley 546/99 de amortización. Proceda con la recolección física de soportes laborales.
-                        </p>
-                    </div>
-
-                    <!-- PRINT ACTION FOR AGENT -->
-                    <div class="flex justify-center">
-                        <button type="button" onclick="window.print()" class="px-6 h-[52px] bg-viventa-black hover:bg-slate-800 text-white font-extrabold rounded-xl text-sm flex items-center justify-center gap-2 shadow-md transition-all">
-                            <i data-lucide="printer" class="w-4 h-4 text-viventa-magenta"></i>
-                            Imprimir Ficha de Radicación (Bancos)
+                    <!-- MINIMALIST ACTION FOR AGENT -->
+                    <div class="flex justify-center pt-2">
+                        <button type="button" onclick="triggerFavorablePDF()" class="px-6 h-[52px] bg-viventa-magenta hover:bg-[#c20054] text-white font-extrabold rounded-xl text-xs flex items-center justify-center gap-2 shadow-lg shadow-pink-200 transition-all">
+                            <i data-lucide="download-cloud" class="w-4 h-4"></i>
+                            Descargar Certificado de Viabilidad (PDF)
                         </button>
                     </div>
                 </div>
@@ -1122,23 +1580,26 @@
             let reasonExplain = "";
             let priority_action = "";
 
-            if (reason === "capacidad_endeudamiento_insuficiente") {
-                reasonExplain = `Los compromisos financieros fijos del cliente (${copFormatter.format(totalEgresos)} COP) en su país de residencia consumen un porcentaje elevado en comparación con los ingresos declarados (${copFormatter.format(income)} COP). Su capacidad neta disponible para amortizar cuotas mensuales es inferior al límite técnico de $600.000 COP, inhabilitando un cupo mínimo hipotecario viable.`;
+            if (reason === "edad_fuera_rango") {
+                reasonExplain = `La edad de los solicitantes se encuentra fuera de los límites aceptados por las entidades financieras aliadas. En el mercado hipotecario de deudas hipotecarias internacionales, el rango general admisible se sitúa entre los 18 y los 74 años, variando según la política interna de cada entidad seleccionada para la radicación.`;
+                priority_action = "Recomendar al cliente que sume a un Co-Titular (por ejemplo, un hijo, sobrino o familiar de primer grado más joven) que cumpla con los rangos de edad requeridos para la postulación familiar.";
+            } else if (reason === "capacidad_endeudamiento_insuficiente") {
+                reasonExplain = `Los compromisos financieros fijos del cliente (${copFormatter.format(totalEgresos)} COP) en su país de residencia consumen un porcentaje elevado en comparación con los ingresos declarados o computables (${copFormatter.format(income)} COP). Su capacidad neta disponible para amortizar cuotas mensuales proyecta un cupo final menor a los $40.000.000 COP, inhabilitando un cupo mínimo hipotecario viable por políticas operativas de las entidades financieras aliadas de Viventa.`;
                 priority_action = "Aconsejar al cliente de manera constructiva consolidar deudas extranjeras o prepagar tarjetas de crédito con mayor cuota de pago mensual fija.";
             } else if (reason === "collections_exterior") {
-                reasonExplain = `El cliente registra reportes de cobros coactivos, cuentas castigadas o Collections activas en el exterior. Los bancos en Colombia inhabilitan de inmediato cualquier radicación si el buró internacional presenta estatus de cobro jurídico o castigado.`;
+                reasonExplain = `El cliente registra reportes de cobros coactivos, cuentas castigadas o Collections activas en el exterior. Los bancos en Colombia inhabilitan de inmediato cualquier radicación si el buró internacional presenta estatus de cobro de deudas que no cumple con el margen de excepciones de Bancolombia o Banco Unión.`;
                 priority_action = "Instruir al cliente a ponerse en contacto con la oficina de cobro extranjera, liquidar el pasivo y remitir el soporte físico de paz y salvo.";
             } else if (reason === "mora_financiera_colombia") {
-                reasonExplain = `El cliente presenta reportes negativos vigentes de moras activas en el sector financiero de Colombia en Datacrédito o Cifin. El sistema nacional de radicación rechaza automáticamente el perfil.`;
+                reasonExplain = `El cliente presenta reportes negativos de moras activas en el sector financiero de Colombia en Datacrédito o Cifin. El sistema nacional de radicación rechaza automáticamente el perfil para las tres entidades financieras.`;
                 priority_action = "Exigir el pago inmediato de las carteras en mora colombianas y adjuntar los certificados de paz y salvo para radicación manual por excepción.";
             } else if (reason === "score_bajo") {
-                reasonExplain = `El score de crédito extranjero de ${score} puntos está por debajo del umbral mínimo de 580 exigido por las políticas globales de los bancos hipotecarios aliados.`;
+                reasonExplain = `El score de crédito extranjero de ${score} puntos está por debajo del umbral mínimo exigido por nuestras entidades financieras aliadas de Viventa o el estatus migratorio reportado inactiva la elegibilidad por score mínimo.`;
                 priority_action = "Recomendar un plan de mejora de puntaje de 3 meses en el exterior, manteniendo consumos de tarjetas de crédito por debajo del 30% del cupo total.";
             } else if (reason === "sin_estatus_regulado") {
-                reasonExplain = `El estatus migratorio reportado por el cliente en el exterior carece de soportes legales permanentes o vigencia suficiente para respaldar el desembolso a mediano plazo.`;
-                priority_action = "Anexar un co-titular que cuente con residencia permanente, ciudadanía o estatus laboral verificado y estable en el exterior.";
+                reasonExplain = `El estatus migratorio reportado por el cliente en el exterior ("Sin estatus regularizado") restringe severamente la elegibilidad de Bancolombia y Davivienda, requiriendo un estatus regular estable para radicación exterior directa.`;
+                priority_action = "Para Bancolombia o Davivienda, anexar un co-titular con residencia permanente, ciudadanía o estatus laboral regulado en el exterior. Banco Unión permite continuar, pero exige un mínimo de 24 meses de permanencia.";
             } else if (reason === "ingresos_insuficientes") {
-                reasonExplain = `Los ingresos familiares declarados están por debajo de los $3.000.000 COP, límite de ingresos mínimos establecido por los bancos aliados para colombianos que residen en el extranjero.`;
+                reasonExplain = `Los ingresos familiares declarados están por debajo de los $3.000.000 COP, límite de ingresos mínimos establecido por los bancos aliados para colombianos que residen en el extranjero de manera devaluación cambiaria.`;
                 priority_action = "Sugerir la unificación de ingresos sumando un Co-Titular directo en Colombia o en el exterior para robustecer la solicitud crediticia.";
             }
 
@@ -1180,7 +1641,154 @@
             lucide.createIcons();
         }
 
-        // PDF Generation using jsPDF aligning with Viventa Corporate Palette and Warm/Affirmative client tone
+        // TRIGGER FAVORABLE CERTIFICATE PDF GENERATION (FULLY COMPLIANT WITH NEW MINIMALIST AND BRAND PROTECTED FORMAT)
+        function triggerFavorablePDF() {
+            if (!cachedApprovalData) {
+                showModal("Error de Datos", "No hay datos de viabilidad almacenados en caché.");
+                return;
+            }
+
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            const copFormatter = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 });
+
+            // Date processing
+            const today = new Date();
+            const dd = String(today.getDate()).padStart(2, '0');
+            const mm = String(today.getMonth() + 1).padStart(2, '0');
+            const yyyy = today.getFullYear();
+            const dateStr = `${dd}/${mm}/${yyyy}`;
+
+            // Recipient Complete Name formatting
+            const clientName = cachedApprovalData.name1.toUpperCase() + (cachedApprovalData.name2 ? ` Y ${cachedApprovalData.name2.toUpperCase()}` : '');
+
+            // Document Header / Decorative Blue Banner
+            doc.setFillColor(50, 55, 85); // Viventa corporate #323755
+            doc.rect(0, 0, 210, 36, 'F');
+
+            // Header Accents (Sleek Magenta Line)
+            doc.setFillColor(230, 0, 100); // Viventa #E60064
+            doc.rect(0, 36, 210, 2, 'F');
+
+            // Header Text Block
+            doc.setTextColor(255, 255, 255);
+            doc.setFont("Helvetica", "bold");
+            doc.setFontSize(11);
+            doc.text("CERTIFICACIÓN DE VIABILIDAD FINANCIERA PARA CRÉDITO HIPOTECARIO", 15, 17);
+            
+            doc.setFont("Helvetica", "normal");
+            doc.setFontSize(9.5);
+            doc.setTextColor(255, 165, 200); // Pink Accent
+            doc.text("Estudio de Viabilidad Financiera – EVF", 15, 25);
+            
+            doc.setFont("Helvetica", "bold");
+            doc.setFontSize(8.5);
+            doc.setTextColor(255, 255, 255);
+            doc.text(`Fecha de emisión: ${dateStr}`, 155, 25);
+
+            // Document Body Content setup (Dynamic Y management to avoid page breaks)
+            doc.setTextColor(50, 55, 85); // Black corporate text
+            doc.setFontSize(9.5);
+
+            let y = 48;
+
+            // Meta Info Section
+            doc.setFont("Helvetica", "bold");
+            doc.text(`Fecha de emisión: ${dateStr}`, 15, y);
+            y += 6;
+            doc.text(`Cliente: ${clientName}`, 15, y);
+            y += 10;
+
+            // Salutation
+            doc.setFont("Helvetica", "normal");
+            doc.text("A quien corresponda,", 15, y);
+            y += 8;
+
+            // Body Paragraph 1 (Sourced exactly as requested)
+            const p1 = `Por medio de la presente, Viventa, empresa especializada en el acompañamiento de crédito hipotecario para colombianos en el exterior, certifica que, una vez realizado el Estudio de Viabilidad Financiera (EVF) del(la) señor(a) ${clientName}, se obtuvo un concepto favorable de viabilidad financiera, de acuerdo con el análisis integral efectuado sobre su perfil financiero y crediticio.`;
+            const p1Lines = doc.splitTextToSize(p1, 180);
+            doc.text(p1Lines, 15, y);
+            y += (p1Lines.length * 4.8) + 4;
+
+            // Body Paragraph 2
+            const p2 = "Como resultado de la evaluación realizada, el cliente presenta un perfil elegible para proceso de financiación hipotecaria, orientado a la adquisición de vivienda en Colombia, conforme a las condiciones generales del mercado y criterios de elegibilidad financiera aplicables al proceso de crédito hipotecario.";
+            const p2Lines = doc.splitTextToSize(p2, 180);
+            doc.text(p2Lines, 15, y);
+            y += (p2Lines.length * 4.8) + 6;
+
+            // Estimated terms card block
+            const boxStartY = y;
+            doc.setFillColor(242, 242, 242); // Gray background fill #F2F2F2
+            doc.rect(15, boxStartY, 180, 24, 'F');
+            doc.setDrawColor(112, 114, 130); // grayb border line
+            doc.setLineWidth(0.1);
+            doc.rect(15, boxStartY, 180, 24, 'D');
+
+            doc.setFont("Helvetica", "bold");
+            doc.text("Condiciones estimadas de financiación", 20, boxStartY + 6);
+            doc.setFont("Helvetica", "normal");
+            doc.text(`Monto estimado de crédito: COP $ ${copFormatter.format(cachedApprovalData.amount)}`, 20, boxStartY + 12);
+            doc.text(`Plazo estimado: 20 años`, 20, boxStartY + 18);
+
+            y = boxStartY + 30;
+
+            // Body Paragraph 3
+            const p3 = "El presente concepto se fundamenta en la evaluación integral de variables asociadas a la capacidad de pago, suficiencia y estabilidad de ingresos, nivel de endeudamiento, comportamiento crediticio y criterios generales de elegibilidad financiera.";
+            const p3Lines = doc.splitTextToSize(p3, 180);
+            doc.text(p3Lines, 15, y);
+            y += (p3Lines.length * 4.8) + 4;
+
+            // Body Paragraph 4
+            const p4 = "En virtud de lo anterior, el cliente evidencia condiciones favorables para continuar con el proceso requerido para la adquisición de inmueble en Colombia. En este sentido, Viventa, como aliado especializado y orquestador del proceso de financiación hipotecaria, acompañará la estructuración y selección de la alternativa de crédito más conveniente, teniendo en cuenta el perfil del cliente, las condiciones financieras disponibles y las políticas vigentes de las entidades aliadas al momento de la radicación formal.";
+            const p4Lines = doc.splitTextToSize(p4, 180);
+            doc.text(p4Lines, 15, y);
+            y += (p4Lines.length * 4.8) + 4;
+
+            // Body Paragraph 5
+            const p5 = "La presente certificación tendrá una vigencia de treinta (30) días calendario, contados a partir de la fecha de emisión del presente documento.";
+            const p5Lines = doc.splitTextToSize(p5, 180);
+            doc.text(p5Lines, 15, y);
+            y += (p5Lines.length * 4.8) + 6;
+
+            // Section "Condiciones importantes"
+            doc.setFont("Helvetica", "bold");
+            doc.text("Condiciones importantes", 15, y);
+            y += 5;
+
+            // Disclaimer Paragraph 1
+            doc.setFont("Helvetica", "normal");
+            const disc1 = "La presente certificación de viabilidad financiera se encuentra sujeta a validación documental, verificación integral de la información suministrada por el cliente y cumplimiento de las políticas de crédito vigentes de la entidad financiera seleccionada al momento de la radicación formal.";
+            const disc1Lines = doc.splitTextToSize(disc1, 180);
+            doc.text(disc1Lines, 15, y);
+            y += (disc1Lines.length * 4.8) + 4;
+
+            // Disclaimer Paragraph 2
+            const disc2 = "En consecuencia, el presente documento no constituye una aprobación definitiva de crédito, ni representa obligación de aprobación o de desembolso por parte de ninguna entidad financiera.";
+            const disc2Lines = doc.splitTextToSize(disc2, 180);
+            doc.text(disc2Lines, 15, y);
+            y += (disc2Lines.length * 4.8) + 12;
+
+            // Signature Footer
+            doc.setFont("Helvetica", "bold");
+            doc.text("Cordialmente,", 15, y);
+            doc.text("VIVENTA", 15, y + 6);
+            
+            doc.setFont("Helvetica", "normal");
+            doc.setFontSize(8.2);
+            doc.text("Comprar casa en Colombia desde el exterior", 15, y + 11);
+            doc.text("Teléfono (USA): +1 315 888 3779", 15, y + 15);
+            doc.text("Correo de servicio al cliente: servicioalcliente@viventa.co", 15, y + 19);
+            doc.text("Sitio web: www.viventa.co", 15, y + 23);
+
+            // Bottom decorative strip
+            doc.setFillColor(230, 0, 100); // #E60064
+            doc.rect(0, 287, 210, 10, 'F');
+
+            // Save formal concept PDF
+            doc.save(`Certificado_Viabilidad_EVF_${cachedApprovalData.name1.split(' ')[0]}.pdf`);
+        }
+
+        // PDF Generation using jsPDF aligning with Viventa Corporate Palette and Warm/Affirmative client tone (NEUTRED FOR BRANDS)
         function generateAccionPDF(reason, name1, secondaryName, score, income, totalEgresos) {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
@@ -1221,28 +1829,36 @@
                 "¡ESTO NO ES UN RECHAZO, ES SOLO EL INICIO DE UN CAMINO DE PREPARACIÓN EXCEPCIONAL!\n\n" +
                 "A veces, la vida nos pide hacer una pausa inteligente para organizar nuestras bases financieras. " +
                 "El análisis nos indica que tu perfil tiene un potencial tremendo, pero requerimos optimizar ciertos factores clave " +
-                "antes de presentarlo con absoluta seguridad a nuestros bancos de primer nivel como Bancolombia o Davivienda.\n\n";
+                "antes de presentarlo con absoluta seguridad a nuestras entidades financieras aliadas de primer nivel en Colombia.\n\n";
 
-            if (reason === "capacidad_endeudamiento_insuficiente") {
+            if (reason === "edad_fuera_rango") {
+                letterText += "TU PUNTO CLAVE DE MEJORA (POLÍTICAS DE EDAD DE LOS BANCOS):\n" +
+                    "Hemos identificado que la edad actual no se ajusta de forma exacta a los límites establecidos por las políticas de " +
+                    "las entidades aliadas en Colombia. Estas políticas son estrictas pero se estructuran para asegurar el seguro de vida del deudor.\n\n" +
+                    "PASOS DE ACCIÓN RECOMENDADOS:\n" +
+                    "1. La solución ideal en estos casos es sumar a un Co-Titular (como un hijo, neto o familiar de primer grado más joven).\n" +
+                    "2. De esta forma, el banco toma como referencia la edad del solicitante más joven para ampliar el plazo del crédito.\n" +
+                    "3. Con esta estructura familiar, podemos unificar ingresos de ambos y garantizar la viabilidad inmediata del desembolso.\n\n";
+            } else if (reason === "capacidad_endeudamiento_insuficiente") {
                 letterText += "TU PUNTO CLAVE DE MEJORA (CAPACIDAD DE ENDEUDAMIENTO):\n" +
                     `Tus compromisos mensuales actuales de tarjetas y préstamos ascienden a ${copFormatter.format(totalEgresos)} COP mensuales, ` +
-                    `absorbiendo una porción importante de tu ingreso mensual consolidado de ${copFormatter.format(income)} COP.\n\n` +
+                    `absorbiendo una porción importante de tu ingreso mensual de ${copFormatter.format(income)} COP.\n\n` +
                     "PASOS DE ACCIÓN RECOMENDADOS:\n" +
                     "1. Efectúa abonos extraordinarios dirigidos a saldar tarjetas de crédito con cuotas fijas altas.\n" +
                     "2. Cancela el cupo de las tarjetas de crédito que no utilices activamente (los bancos calculan riesgo sobre el cupo total).\n" +
                     "3. Evita adquirir deudas de consumo, vehículos o financiamientos rápidos durante los próximos 180 días.\n\n";
             } else if (reason === "collections_exterior") {
                 letterText += "TU PUNTO CLAVE DE MEJORA (COLLECTIONS EN EL EXTERIOR):\n" +
-                    "Hemos detectado registros de cuentas castigadas (Collections) en el exterior. El sistema bancario hipotecario colombiano " +
-                    "solicita limpieza total en historiales internacionales para viabilizar cupos de crédito remotos.\n\n" +
+                    "Hemos detectado registros de cuentas castigadas (Collections) en el exterior. El sistema bancario de colocación remota " +
+                    "solicita limpieza total en historiales internacionales para viabilizar cupos de crédito.\n\n" +
                     "PASOS DE ACCIÓN RECOMENDADOS:\n" +
-                    "1. Ponte en contacto con la entidad de cobranza, realiza un acuerdo de pago y exige tu paz y salvo físico.\n" +
+                    "1. Ponte en contacto con la entidad de cobranza, realiza un acuerdo de pago and exige tu paz y salvo físico.\n" +
                     "2. Monitorea que tu score vuelva a tomar fuerza una vez el reporte negativo sea sabaneado.\n" +
                     "3. Sigue ahorrando con disciplina para aumentar tu cuota inicial, lo que facilitará tu aprobación posterior.\n\n";
             } else if (reason === "mora_financiera_colombia") {
                 letterText += "TU PUNTO CLAVE DE MEJORA (MORAS FINANCIERAS EN COLOMBIA):\n" +
-                    "Se registran alertas negativas vigentes en el sector financiero colombiano. Sanear estas moras internas en Datacrédito " +
-                    "y Cifin es el paso primordial para abrir nuevamente las puertas bancarias nacionales.\n\n" +
+                    "Se registran alertas negativas vigentes en el sector financiero de Colombia. Sanear estas moras internas en Datacrédito " +
+                    "y Cifin es el paso primordial para abrir nuevamente las puertas de financiamiento.\n\n" +
                     "PASOS DE ACCIÓN RECOMENDADOS:\n" +
                     "1. Efectúa el pago total del saldo pendiente con la entidad financiera acreedora.\n" +
                     "2. Solicita el paz y salvo oficial físico y radícalo ante Viventa para respaldar tu saneamiento de cartera.\n" +
@@ -1250,20 +1866,22 @@
             } else if (reason === "score_bajo") {
                 letterText += "TU PUNTO CLAVE DE MEJORA:\n" +
                     `Hemos identificado que tu credit score en el exterior se encuentra en ${score} puntos. El sistema financiero de vivienda ` +
-                    "colombiana exige habitualmente un umbral mínimo de 580 o 600 puntos internacionales. Esto es algo que podemos solucionar de " +
+                    "colombiana exige habitualmente un comportamiento crediticio de primer nivel. Esto es algo que podemos solucionar de " +
                     "forma metódica en el corto plazo. ¡Estoy convencido de que lo lograrás pronto!\n\n" +
                     "PASOS DE ACCIÓN RECOMENDADOS:\n" +
                     "1. Utiliza tus tarjetas de crédito con disciplina: no consumas más del 30% del cupo y realiza el pago completo 3 días antes del corte.\n" +
                     "2. Corrige cualquier reporte erróneo en agencias crediticias de tu país de residencia.\n" +
-                    "3. Mantén tus deudas en el exterior al mínimo, priorizando el saldo de préstamos de consumo rápido.\n\n";
+                    "3. Mantén tus deudas en el exterior al mínimo, priorizando el saldo de préstamos de consumo rápido.\n" +
+                    "4. Reestablece tu perfil de radicación con el equipo de soporte de Viventa.\n\n";
             } else if (reason === "sin_estatus_regulado") {
                 letterText += "TU PUNTO CLAVE DE MEJORA:\n" +
                     "Actualmente, la consolidación documental de tu estatus migratorio requiere de mayores soportes. La estabilidad de " +
-                    "residencia o un permiso de trabajo con antigüedad son credenciales sumamente valiosas ante los analistas de crédito colombianos.\n\n" +
+                    "residencia o un permiso de trabajo con antigüedad son credenciales sumamente valiosas ante los analistas de crédito en Colombia.\n\n" +
                     "PASOS DE ACCIÓN RECOMENDADOS:\n" +
                     "1. Consolida la constancia de ingresos a través de cuentas bancarias formales del exterior por un período mínimo de 6 meses.\n" +
                     "2. Procura adjuntar en tu próxima simulación un Co-titular que resida en Colombia o con un estatus migratorio formal consolidado.\n" +
-                    "3. Solicita declaraciones de impuestos estables (Taxes) del país donde habitas hoy.\n\n";
+                    "3. Solicita declaraciones de impuestos estables (Taxes) del país donde habitas hoy.\n" +
+                    "4. Reestablece tu perfil de radicación con el equipo de soporte de Viventa.\n\n";
             } else {
                 letterText += "TU PUNTO CLAVE DE MEJORA:\n" +
                     `Tus ingresos declarados equivalen a $${copFormatter.format(income)} COP. Para adquirir vivienda desde el exterior, ` +
@@ -1271,15 +1889,16 @@
                     "PASOS DE ACCIÓN RECOMENDADOS:\n" +
                     "1. Apóyate en un segundo proponente o co-titular (cónyuge, padres, hermanos) para sumar capacidad de pago conjunta.\n" +
                     "2. Declara y certifica tus ingresos complementarios (servicios adicionales, honorarios o negocios propios con estados financieros bancarios).\n" +
-                    "3. Enfócate en consolidar un ahorro del 35% al 40% del valor comercial de la vivienda, reduciendo el monto a financiar.\n\n";
+                    "3. Enfócate en consolidar un ahorro del 35% al 40% del valor comercial de la vivienda, reduciendo el monto a financiar.\n" +
+                    "4. Reestablece tu perfil de radicación con el equipo de soporte de Viventa.\n\n";
             }
 
             letterText += "TU CRONOGRAMA DE TRABAJO (Próximos 6 meses):\n" +
                 "• Mes 1 a 3: Ordenar deudas prioritarias, liquidar cuotas de consumo y tarjetas en el exterior.\n" +
-                "• Mes 4 y 5: Consolidar extractos bancarios impecables, sin sobregiros y con capacidad de ahorro.\n" +
+                "• Mes 4 y 5: Consolidar extractos bancarios impecables, sin sobregiros and con capacidad de ahorro.\n" +
                 "• Mes 6: Volver a simular con tu amigo de confianza Viventa para dar el paso definitivo de aprobación.\n\n" +
                 "Recuerda siempre: las grandes metas se construyen con bloques de disciplina diaria. " +
-                "Confío plenamente en tu tenacidad. Tu sueño de tener casa propia en tu amada patria está cada vez más cerca. " +
+                "Confío plenamente en tu tenacidad. Tu sueño de tener casa propio en tu amada patria está cada vez más cerca. " +
                 "¡Estás en el camino correcto y Viventa te estará esperando para celebrarlo!\n\n" +
                 "Con gran aprecio y fe,\n" +
                 "Tu Amigo Sabio y Consejero Financiero Viventa";
@@ -1298,14 +1917,15 @@
 
         // Reset Simulator parameters
         function resetSimulator() {
-            currentStep = 1;
             requiresCotitular = false;
+            cachedApprovalData = null;
 
             // Reset inputs
             document.getElementById('simulatorForm').reset();
             
             // Hide conditional sectors on reset
             toggleMoraSector(false);
+            toggleCollectionsFields(false);
 
             // Hide/Show correct step content
             goToStep(1);
