@@ -6,8 +6,8 @@
     <title>Simulador de Crédito Interno - Viventa</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts: Manrope & Playfair Display -->
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <!-- Google Fonts: Manrope -->
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <!-- jsPDF CDN para generación de reportes en PDF -->
@@ -32,8 +32,7 @@
                         }
                     },
                     fontFamily: {
-                        sans: ['Manrope', 'sans-serif'],
-                        serif: ['Playfair Display', 'serif']
+                        sans: ['Manrope', 'sans-serif']
                     }
                 }
             }
@@ -59,10 +58,10 @@
         }
     </style>
 </head>
-<body class="bg-slate-50 min-h-screen text-viventa-black antialiased flex flex-col justify-between py-6">
+<body class="bg-slate-50 min-h-screen text-viventa-black antialiased flex flex-col justify-between py-6 font-sans">
 
     <!-- MAIN CONTAINER -->
-    <main class="max-w-6xl mx-auto px-4 flex-grow w-full space-y-6">
+    <main class="max-w-6xl mx-auto px-4 flex-grow w-full space-y-6 font-sans">
         
         <!-- STEP INDICATOR ONLY (COMPACT & HORIZONTALLY CENTERED) -->
         <div class="bg-white border border-viventa-gray rounded-2xl p-4 flex justify-center items-center shadow-sm">
@@ -129,7 +128,7 @@
                 <!-- STEP B: FLUJO DISPONIBLE -->
                 <div class="bg-slate-50 border border-slate-100 rounded-xl p-4 flex flex-col justify-between min-h-[92px]">
                     <div class="flex justify-between items-start">
-                        <span class="text-[9px] uppercase tracking-widest text-viventa-grayb font-extrabold block font-sans">B. Flujo de Caja Disponible</span>
+                        <span class="text-[9px] uppercase tracking-widest text-viventa-grayb font-extrabold block">B. Flujo de Caja Disponible</span>
                         <i data-lucide="wallet" class="w-3.5 h-3.5 text-viventa-grayb"></i>
                     </div>
                     <div class="flex items-baseline gap-1 mt-1">
@@ -515,7 +514,7 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-end">
                             <!-- País Residencia -->
                             <div class="flex flex-col justify-end w-full">
-                                <label class="block text-xs font-bold text-viventa-grayb mb-2">País Residencia Co-Titular *</label>
+                                <label class="block text-xs font-bold text-viventa-black uppercase tracking-wider mb-2">País Residencia Co-Titular *</label>
                                 <select id="p2_pais" class="w-full h-[52px] px-4 rounded-xl border border-viventa-grayb/20 bg-white text-sm font-semibold text-viventa-black outline-none">
                                     <option value="" disabled selected>Selecciona país...</option>
                                     <option value="EEUU">EEUU</option>
@@ -532,7 +531,7 @@
                             <!-- Fecha de ingreso -->
                             <div class="flex flex-col justify-end w-full">
                                 <label class="block text-xs font-bold text-viventa-black uppercase tracking-wider mb-2">Fecha Ingreso Co-Titular *</label>
-                                <input type="date" id="p2_fecha_ingreso" class="w-full h-[52px] px-4 rounded-xl border border-viventa-grayb/20 text-sm font-semibold text-viventa-black outline-none bg-white">
+                                <input type="date" id="p2_fecha_ingreso" class="w-full h-[52px] px-4 rounded-xl border border-viventa-grayb/20 text-sm font-semibold text-viventa-black text-center outline-none bg-white">
                             </div>
                             <!-- Estatus Migratorio -->
                             <div class="flex flex-col justify-end w-full">
@@ -636,10 +635,26 @@
         let requiresCotitular = false;
         let cachedApprovalData = null;
 
-        // Dom Elements references
-        const stepNodeCotitular = document.getElementById('step-node-cotitular');
-        const stepNodeFinal = document.getElementById('step-node-final');
-        const lineStepCotitular = document.getElementById('line-step-cotitular');
+        // Custom Bank SVGs for a highly elegant, premium SaaS interface (Manrope aligned)
+        const bankLogos = {
+            "Bancolombia": `<svg class="w-10 h-10 rounded-lg shadow-sm" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="32" height="32" rx="8" fill="#FEE100"/>
+                <rect x="5" y="10" width="22" height="3" fill="#000000"/>
+                <rect x="5" y="15" width="22" height="3" fill="#002F6C"/>
+                <rect x="5" y="20" width="22" height="3" fill="#E4002B"/>
+            </svg>`,
+            "Davivienda": `<svg class="w-10 h-10 rounded-lg shadow-sm" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="32" height="32" rx="8" fill="#ED1C24"/>
+                <path d="M10 21H22V26H10V21Z" fill="white"/>
+                <path d="M16 7L7 16H25L16 7Z" fill="white"/>
+                <rect x="13" y="21" width="6" height="5" fill="#ED1C24"/>
+            </svg>`,
+            "Banco Unión": `<svg class="w-10 h-10 rounded-lg shadow-sm" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="32" height="32" rx="8" fill="#004B87"/>
+                <circle cx="16" cy="16" r="9" stroke="#00E6C8" stroke-width="2.5" fill="none"/>
+                <circle cx="16" cy="16" r="4.5" fill="white"/>
+            </svg>`
+        };
 
         // Only Bancolombia, Davivienda and Banco Unión are evaluated now as requested.
         const bankRules = [
@@ -652,7 +667,7 @@
                 rate: "15.52% E.A.",
                 term: 240, // 20 years
                 maxAmount: 600000000,
-                logo: "💛"
+                logo: "Bancolombia"
             },
             {
                 name: "Davivienda",
@@ -663,7 +678,7 @@
                 rate: "14.0% E.A.",
                 term: 240, // 20 years
                 maxAmount: 450000000,
-                logo: "❤️"
+                logo: "Davivienda"
             },
             {
                 name: "Banco Unión",
@@ -674,7 +689,7 @@
                 rate: "16.5% E.A.", // Updated to match user shared rate 16.5% E.A.
                 term: 180, // 15 years max allowed
                 maxAmount: 250000000,
-                logo: "💙"
+                logo: "Banco Unión"
             }
         ];
 
@@ -1045,6 +1060,7 @@
         }
 
         // Navigation back logic to modify previously filled values without clearing state
+        // Si el co-titular está activo, regresa al paso 3, de lo contrario al paso 2.
         function goBackToForm() {
             if (requiresCotitular) {
                 goToStep(3);
@@ -1160,6 +1176,14 @@
                 let maxHipotecarioSugerido = 0;
                 let isViable = true;
 
+                // Checklist objects for the premium UI cards
+                let policyCheck = {
+                    edad: true,
+                    ingreso: true,
+                    permanencia: true,
+                    buro: true
+                };
+
                 // 1. Age verification
                 const p1_age_ok = p1_age_months >= (bank.minAge * 12) && p1_age_months <= bank.maxAgeMonths;
                 let p2_age_ok = true;
@@ -1170,6 +1194,7 @@
                 if (!p1_age_ok || !p2_age_ok) {
                     isViable = false;
                     reason = "Fuera de rango de edad institucional";
+                    policyCheck.edad = false;
                 }
 
                 // 2. Minimum Income & Minimum Stay verification
@@ -1178,57 +1203,66 @@
                         if (p1_pais === "EEUU" && total_ingresos_brutos < 7528892) {
                             isViable = false;
                             reason = "Ingresos < 4.3 SMMLV ($7.528.892 COP) para EEUU";
+                            policyCheck.ingreso = false;
                         }
                         if (p1_stay_months < 24 || (requiresCotitular && p2_stay_months < 24)) {
                             isViable = false;
                             reason = "Permanencia menor a 24 meses requerida";
+                            policyCheck.permanencia = false;
                         }
                     } else if (bank.name === "Davivienda") {
                         if (total_ingresos_brutos < 1750905) {
                             isViable = false;
                             reason = "Ingresos menores a 1 SMMLV ($1.750.905 COP)";
+                            policyCheck.ingreso = false;
                         }
                         const req_stay_d = (p1_pais === "EEUU") ? 12 : 24;
                         if (p1_stay_months < req_stay_d || (requiresCotitular && p2_stay_months < req_stay_d)) {
                             isViable = false;
                             reason = `Permanencia mínima requerida es de ${req_stay_d} meses`;
+                            policyCheck.permanencia = false;
                         }
                     } else if (bank.name === "Banco Unión") {
                         if ((total_ingresos_brutos / TRM) < 1500) {
                             isViable = false;
-                            reason = "Ingresos mensuales menores a USD 1,500";
+                            reason = "Ingresos mensuales menores a USD 1,500 ($6.000.000 COP)";
+                            policyCheck.ingreso = false;
                         }
                         const req_stay_u = (p1_estatus !== "sin_estatus") ? 12 : 24;
                         const p2_req_stay_u = (requiresCotitular && p2_estatus !== "sin_estatus") ? 12 : 24;
                         if (p1_stay_months < req_stay_u || (requiresCotitular && p2_stay_months < p2_req_stay_u)) {
                             isViable = false;
                             reason = `Permanencia requerida según estatus es de ${req_stay_u} meses`;
+                            policyCheck.permanencia = false;
                         }
                     }
                 }
 
-                // 3. NEW IMMIGRATION STATUS VALIDATION RULES
+                // 3. IMMIGRATION STATUS VALIDATION RULES
                 if (isViable) {
                     if (bank.name === "Bancolombia") {
                         if (p1_estatus === "licencia_temporal" || p1_estatus === "sin_estatus") {
                             isViable = false;
                             reason = "Bancolombia: Estatus temporal o no regularizado no elegible.";
+                            policyCheck.buro = false;
                         }
                         if (requiresCotitular && (p2_estatus === "licencia_temporal" || p2_estatus === "sin_estatus")) {
                             isViable = false;
                             reason = "Co-titular: Estatus migratorio temporal o no regularizado no elegible para Bancolombia.";
+                            policyCheck.buro = false;
                         }
                     } else if (bank.name === "Davivienda") {
                         if (p1_estatus === "sin_estatus") {
                             isViable = false;
                             reason = "Davivienda: Estatus no regularizado no elegible.";
+                            policyCheck.buro = false;
                         }
                         if (requiresCotitular && p2_estatus === "sin_estatus") {
                             isViable = false;
                             reason = "Co-titular: Estatus migratorio no regularizado no elegible para Davivienda.";
+                            policyCheck.buro = false;
                         }
                     }
-                    // Banco Unión accepts all profiles, even sin_estatus (stay requirements checked on step 2)
                 }
 
                 // 4. Credit Scores and Delinquencies Check
@@ -1237,30 +1271,34 @@
                         if (p1_score !== 0 && p1_score < 600) {
                             isViable = false;
                             reason = "Score crediticio menor a 600 puntos";
+                            policyCheck.buro = false;
                         }
                         if (p1_mora_colombia === "si") {
-                            if (p1_mora_sector === "financiero") { isViable = false; reason = "Rechazo de moras del sector financiero"; }
-                            if (p1_mora_sector === "real" && p1_mora_paz_salvo === "no") { isViable = false; reason = "Sector real requiere Paz y Salvo"; }
+                            if (p1_mora_sector === "financiero") { isViable = false; reason = "Rechazo de moras del sector financiero"; policyCheck.buro = false; }
+                            if (p1_mora_sector === "real" && p1_mora_paz_salvo === "no") { isViable = false; reason = "Sector real requiere Paz y Salvo"; policyCheck.buro = false; }
                         }
                         if (p1_mora_exterior === "si") {
                             const p1_comp_check = p1_ingresos * (p1_actividad === "empleado" ? 0.90 : 0.70);
-                            if ((p1_collections_medicas_USD * TRM) > (p1_comp_check * 0.50)) { isViable = false; reason = "Collections médicas exceden 50% de ingresos"; }
-                            if (p1_collections_no_medicas_qty > 1) { isViable = false; reason = "Excede cupo máximo de 1 collection no médica"; }
-                            if ((p1_collections_no_medicas_USD * TRM) > (p1_comp_check * 0.50)) { isViable = false; reason = "Collection no médica excede 50% de ingresos"; }
+                            if ((p1_collections_medicas_USD * TRM) > (p1_comp_check * 0.50)) { isViable = false; reason = "Collections médicas exceden 50% de ingresos"; policyCheck.buro = false; }
+                            if (p1_collections_no_medicas_qty > 1) { isViable = false; reason = "Excede cupo máximo de 1 collection no médica"; policyCheck.buro = false; }
+                            if ((p1_collections_no_medicas_USD * TRM) > (p1_comp_check * 0.50)) { isViable = false; reason = "Collection no médica excede 50% de ingresos"; policyCheck.buro = false; }
                         }
                     } else if (bank.name === "Davivienda") {
                         if (p1_score < 600) {
                             isViable = false;
                             reason = "Score crediticio inferior a 600";
+                            policyCheck.buro = false;
                         }
                         if (p1_mora_colombia === "si") {
                             isViable = false;
-                            reason = "Rechazo estricto de moras en Colombia";
+                            reason = "Davivienda: No acepta moras en Colombia de ningún tipo";
+                            policyCheck.buro = false;
                         }
                     } else if (bank.name === "Banco Unión") {
                         if (p1_mora_colombia === "si" && p1_mora_paz_salvo === "no") {
                             isViable = false;
-                            reason = "Requiere Paz y Salvo para saniamiento en Colombia";
+                            reason = "Requiere Paz y Salvo para saneamiento en Colombia";
+                            policyCheck.buro = false;
                         }
                         const total_coll_USD = p1_collections_medicas_USD + p1_collections_no_medicas_USD;
                         if (p1_mora_exterior === "si" && total_coll_USD > 1500) {
@@ -1297,7 +1335,7 @@
                     let cuotaViableBase = Math.min(maxCuotaLimit, cashAvailable);
                     if (bank.name === "Banco Unión") {
                         // Banco Unión requiere conservar libre el equivalente a 1.5 veces la cuota del disponible computable
-                        // Aplicamos el factor divisor de 1.973 (que mapea con la relación real de deudas/liquidez interna)
+                        // Aplicamos el factor divisor de 1.973 (que mapea con la relación de liquidez interna)
                         cuotaViableBase = Math.min(maxCuotaLimit, cashAvailable / 1.973);
                     }
 
@@ -1374,7 +1412,8 @@
                     maxAmount: isViable ? Math.round(montoMaximoFinal) : 0,
                     rate: bank.rate,
                     term: bank.term,
-                    cuotaViable: isViable ? Math.round(cuotaMensualEstimada) : 0
+                    cuotaViable: isViable ? Math.round(cuotaMensualEstimada) : 0,
+                    policyCheck: policyCheck
                 };
             });
 
@@ -1410,28 +1449,54 @@
             }
 
             // Assign standard maximum leverage terms if approved
+            let selectedBankName = "";
+            let selectedAmount = 0;
+            let selectedTerm = 0;
+            let selectedRate = "";
+            let selectedLogo = "";
+
             if (approved) {
                 finalEligibleBanks.sort((a, b) => b.probability - a.probability || b.maxAmount - a.maxAmount);
                 const selectedBank = finalEligibleBanks[0];
-                
-                // Determine Colombian mora sector if Paz y Salvo is active to dynamically display specific warning sector
-                const colMoraActive = (p1_mora_colombia === 'si' && p1_mora_paz_salvo === 'si') ? p1_mora_sector : '';
-
-                displayApproval(selectedBank.name, selectedBank.maxAmount, selectedBank.term, selectedBank.rate, p1_nombre, p2_nombre, colMoraActive, selectedBank.cuotaViable, selectedBank.logo, bankCalculations);
-            } else {
-                displayRejection(reject_reason, p1_nombre, p2_nombre, p1_score, total_ingresos_brutos, egresos_totales_Estudio);
+                selectedBankName = selectedBank.name;
+                selectedAmount = selectedBank.maxAmount;
+                selectedTerm = selectedBank.term;
+                selectedRate = selectedBank.rate;
+                selectedLogo = selectedBank.logo;
             }
+
+            // Determine Colombian mora sector if Paz y Salvo is active to dynamically display specific warning sector
+            const colMoraActive = (p1_mora_colombia === 'si' && p1_mora_paz_salvo === 'si') ? p1_mora_sector : '';
+
+            // We ALWAYS call displayApproval now, passing the approved state so the UI adapts cleanly
+            displayApproval(
+                selectedBankName, 
+                selectedAmount, 
+                selectedTerm, 
+                selectedRate, 
+                p1_nombre, 
+                p2_nombre, 
+                colMoraActive, 
+                approved ? finalEligibleBanks[0].cuotaViable : 0, 
+                selectedLogo, 
+                bankCalculations,
+                approved,
+                reject_reason,
+                score_final,
+                total_ingresos_brutos,
+                egresos_totales_Estudio
+            );
 
             // Progress to final results step display (step-content-4)
             goToStep(4);
         }
 
         // Render Pre-Approval UI (Visualizing Probability for Allied Banks with distinct automated calculated instalments)
-        function displayApproval(bank, amount, term, rate, name1, name2, colMoraActive, cuotaDisponible, bankIcon, eligibleBanks) {
+        function displayApproval(bank, amount, term, rate, name1, name2, colMoraActive, cuotaDisponible, bankIcon, eligibleBanks, approved, reject_reason, score_final, total_ingresos_brutos, egresos_totales_Estudio) {
             const container = document.getElementById('result-payload');
             const copFormatter = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 });
 
-            // Store in cache for PDF generation
+            // Store in cache for PDF generation (Adaptable to rejected/approved flows)
             cachedApprovalData = {
                 bank: bank,
                 amount: amount,
@@ -1441,55 +1506,97 @@
                 name2: name2,
                 hasMoraReal: colMoraActive,
                 cuotaDisponible: cuotaDisponible,
-                eligibleBanks: eligibleBanks
+                eligibleBanks: eligibleBanks,
+                approved: approved,
+                reject_reason: reject_reason,
+                score_final: score_final,
+                total_ingresos_brutos: total_ingresos_brutos,
+                egresos_totales_Estudio: egresos_totales_Estudio
             };
 
-            // Build HTML list of all allied banks with their approval probabilities
+            // Build HTML list of all allied banks with their approval probabilities and vector SVGs
             let banksListHTML = `<div class="space-y-3.5">`;
             
             eligibleBanks.forEach(b => {
-                let badgeClass = "bg-slate-100 text-slate-600";
+                let badgeClass = "bg-slate-100 text-slate-600 border-slate-200";
                 let barColorClass = "bg-slate-300";
                 
                 if (b.status === "Alta") {
-                    badgeClass = "bg-emerald-50 text-emerald-700 border border-emerald-200";
+                    badgeClass = "bg-emerald-50 text-emerald-700 border-emerald-200";
                     barColorClass = "bg-viventa-mist";
                 } else if (b.status === "Media" || b.status === "Revisión") {
-                    badgeClass = "bg-amber-50 text-amber-700 border border-amber-200";
+                    badgeClass = "bg-amber-50 text-amber-700 border-amber-200";
                     barColorClass = "bg-viventa-purple";
                 } else if (b.status === "Baja") {
-                    badgeClass = "bg-rose-50 text-rose-700 border border-rose-200";
+                    badgeClass = "bg-rose-50 text-rose-700 border-rose-200";
                     barColorClass = "bg-viventa-magenta";
                 } else {
-                    badgeClass = "bg-slate-100 text-slate-400 border border-slate-200";
+                    badgeClass = "bg-slate-100 text-slate-400 border-slate-200";
                     barColorClass = "bg-slate-200";
                 }
 
+                // Render policy checks checklist badges (premium feature for commercial agents)
+                const renderCheck = (isValid) => isValid 
+                    ? `<span class="inline-flex items-center gap-0.5 text-[10px] text-emerald-600 font-extrabold bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">Edad ✔</span>`
+                    : `<span class="inline-flex items-center gap-0.5 text-[10px] text-rose-600 font-extrabold bg-rose-50 px-2 py-0.5 rounded border border-rose-200">Edad ✘</span>`;
+                const renderInc = (isValid) => isValid 
+                    ? `<span class="inline-flex items-center gap-0.5 text-[10px] text-emerald-600 font-extrabold bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">Ingreso ✔</span>`
+                    : `<span class="inline-flex items-center gap-0.5 text-[10px] text-rose-600 font-extrabold bg-rose-50 px-2 py-0.5 rounded border border-rose-200">Ingreso ✘</span>`;
+                const renderStay = (isValid) => isValid 
+                    ? `<span class="inline-flex items-center gap-0.5 text-[10px] text-emerald-600 font-extrabold bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">Permanencia ✔</span>`
+                    : `<span class="inline-flex items-center gap-0.5 text-[10px] text-rose-600 font-extrabold bg-rose-50 px-2 py-0.5 rounded border border-rose-200">Permanencia ✘</span>`;
+                const renderBuro = (isValid) => isValid 
+                    ? `<span class="inline-flex items-center gap-0.5 text-[10px] text-emerald-600 font-extrabold bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">Buró ✔</span>`
+                    : `<span class="inline-flex items-center gap-0.5 text-[10px] text-rose-600 font-extrabold bg-rose-50 px-2 py-0.5 rounded border border-rose-200">Buró ✘</span>`;
+
+                const svgLogo = bankLogos[b.name] || '';
+
                 banksListHTML += `
-                    <div class="bg-slate-50 border border-slate-100 rounded-xl p-3.5 space-y-2.5">
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center gap-2">
-                                <span class="text-base">${b.logo}</span>
-                                <span class="text-xs font-extrabold text-viventa-black">${b.name}</span>
+                    <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-4 md:p-5 space-y-3.5 hover:border-slate-300 transition-all">
+                        <div class="flex items-center justify-between gap-3 flex-wrap">
+                            <div class="flex items-center gap-3">
+                                ${svgLogo}
+                                <div>
+                                    <h5 class="text-sm font-extrabold text-viventa-black">${b.name}</h5>
+                                    <span class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">${b.isViable ? 'Tasa: ' + b.rate : 'No Elegible'}</span>
+                                </div>
                             </div>
-                            <div class="flex items-center gap-2">
-                                <span class="text-xs font-bold text-slate-600">${b.isViable ? b.probability + '% Probabilidad' : 'No Viable'}</span>
-                                <span class="text-[9px] px-2 py-0.5 rounded-full font-black uppercase ${badgeClass}">${b.status}</span>
+                            <div class="flex flex-col items-end gap-1 shrink-0">
+                                <span class="text-[11px] font-extrabold text-slate-600">${b.isViable ? b.probability + '% Probabilidad' : 'Perfil no elegible'}</span>
+                                <span class="text-[9px] px-2.5 py-0.5 rounded-full font-black uppercase border ${badgeClass}">${b.status}</span>
                             </div>
                         </div>
                         
-                        <!-- Mini Bar progress -->
-                        <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+                        <!-- Progress bar with brand coloring -->
+                        <div class="w-full bg-slate-200 h-2.5 rounded-full overflow-hidden">
                             <div class="h-full ${barColorClass} transition-all duration-300" style="width: ${b.probability}%"></div>
                         </div>
+
+                        <!-- Policy checklist parameters (SaaS premium checklist) -->
+                        <div class="flex flex-wrap gap-1.5 items-center pt-0.5">
+                            <span class="text-[10px] text-slate-400 font-bold uppercase mr-1">Filtros:</span>
+                            ${renderCheck(b.policyCheck.edad)}
+                            ${renderInc(b.policyCheck.ingreso)}
+                            ${renderStay(b.policyCheck.permanencia)}
+                            ${renderBuro(b.policyCheck.buro)}
+                        </div>
                         
-                        ${b.reason ? `<span class="text-[9px] text-rose-500 font-bold block">* ${b.reason}</span>` : ''}
+                        ${b.reason ? `<span class="text-[11px] text-rose-500 font-extrabold flex items-center gap-1"><i data-lucide="info" class="w-3.5 h-3.5"></i> * ${b.reason}</span>` : ''}
                         
                         ${b.isViable ? `
-                        <div class="grid grid-cols-3 gap-2 pt-1 text-[11px] text-slate-600 font-medium">
-                            <div>Crédito Máx: <strong class="text-slate-900 block">${copFormatter.format(b.maxAmount)}</strong></div>
-                            <div>Plazo Máx: <strong class="text-slate-900 block">${b.term / 12} años</strong></div>
-                            <div>Cuota Mensual: <strong class="text-viventa-magenta block">${copFormatter.format(b.cuotaViable)}</strong></div>
+                        <div class="grid grid-cols-3 gap-3 pt-2 border-t border-slate-200/60 text-xs font-semibold text-slate-600">
+                            <div>
+                                <span class="text-[9px] text-slate-400 block uppercase font-bold tracking-wider">Crédito Máx</span>
+                                <strong class="text-slate-900 block text-sm mt-0.5">${copFormatter.format(b.maxAmount)}</strong>
+                            </div>
+                            <div>
+                                <span class="text-[9px] text-slate-400 block uppercase font-bold tracking-wider">Plazo Máx</span>
+                                <strong class="text-slate-900 block text-sm mt-0.5">${b.term / 12} años</strong>
+                            </div>
+                            <div>
+                                <span class="text-[9px] text-slate-400 block uppercase font-bold tracking-wider">Cuota Mensual</span>
+                                <strong class="text-viventa-magenta block text-sm mt-0.5">${copFormatter.format(b.cuotaViable)}</strong>
+                            </div>
                         </div>
                         ` : ''}
                     </div>
@@ -1497,14 +1604,39 @@
             });
             banksListHTML += `</div>`;
 
-            container.innerHTML = `
-                <div class="space-y-6 animate-in fade-in duration-500">
+            // Build dynamic headers depending on approved status
+            let headerHTML = '';
+            let downloadButtonHTML = '';
+
+            if (approved) {
+                headerHTML = `
                     <div class="text-center space-y-2">
                         <div class="w-12 h-12 rounded-full bg-viventa-lightgreen/50 text-emerald-700 flex items-center justify-center mx-auto shadow-sm">
                             <i data-lucide="check-circle" class="w-6 h-6"></i>
                         </div>
                         <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-600">ESTUDIO DE VIABILIDAD CONCLUIDO</span>
                     </div>
+                `;
+                downloadButtonHTML = `
+                    <button type="button" onclick="triggerFavorablePDF()" class="px-6 h-[52px] bg-viventa-magenta hover:bg-[#c20054] text-white font-extrabold rounded-xl text-xs flex items-center justify-center gap-2 shadow-lg shadow-pink-200 transition-all animate-in fade-in duration-300">
+                        <i data-lucide="download-cloud" class="w-4 h-4"></i>
+                        Descargar Certificado de Viabilidad (PDF)
+                    </button>
+                `;
+            } else {
+                headerHTML = `
+                    <div class="text-center space-y-2">
+                        <div class="w-12 h-12 rounded-full bg-rose-50 text-rose-600 flex items-center justify-center mx-auto shadow-sm">
+                            <i data-lucide="alert-circle" class="w-6 h-6"></i>
+                        </div>
+                        <span class="text-[10px] font-bold uppercase tracking-wider text-rose-600">PERFIL EN PREPARACIÓN (NO VIABLE ACTUALMENTE)</span>
+                    </div>
+                `;
+            }
+
+            container.innerHTML = `
+                <div class="space-y-6 animate-in fade-in duration-500">
+                    ${headerHTML}
 
                     ${colMoraActive ? `
                     <div class="bg-amber-50 border border-amber-200 text-amber-900 rounded-xl p-4 text-xs font-semibold">
@@ -1521,117 +1653,9 @@
                         ${banksListHTML}
                     </div>
 
-                    <!-- ESTIMATED TERMS SUMMARIZED CARD -->
-                    <div class="bg-gradient-to-tr from-viventa-black to-[#484e75] text-white rounded-3xl p-6 relative overflow-hidden border border-slate-700 shadow-md">
-                        <div class="absolute -right-10 -bottom-10 opacity-10 text-[120px]">🏠</div>
-                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-white/10 pb-4">
-                            <div>
-                                <span class="text-[9px] uppercase tracking-widest text-slate-300 font-bold block">Estructuración Global de la Operación</span>
-                                <div class="flex items-center gap-2 mt-1">
-                                    <span class="text-lg">🏠</span>
-                                    <h4 class="text-xl font-extrabold text-white">Financiación Estimada de Vivienda</h4>
-                                </div>
-                            </div>
-                            <div class="px-3 py-1 bg-viventa-magenta text-white rounded-lg text-xs font-bold">
-                                Estudio Viable
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4 text-xs">
-                            <div>
-                                <span class="text-slate-400 block font-bold uppercase text-[9px]">Monto Máximo Sugerido</span>
-                                <span class="text-xl md:text-2xl font-black mt-1 text-viventa-pink block">${copFormatter.format(amount)}</span>
-                            </div>
-                            <div>
-                                <span class="text-slate-400 block font-bold uppercase text-[9px]">Plazo Promedio</span>
-                                <span class="text-base font-bold mt-1 text-white block">240 meses (20 años)</span>
-                            </div>
-                            <div>
-                                <span class="text-slate-400 block font-bold uppercase text-[9px]">Tasa de Convenio Estimada</span>
-                                <span class="text-base font-bold mt-1 text-viventa-mist block">${rate}</span>
-                            </div>
-                        </div>
-                    </div>
-
                     <!-- MINIMALIST ACTION FOR AGENT -->
                     <div class="flex justify-center pt-2">
-                        <button type="button" onclick="triggerFavorablePDF()" class="px-6 h-[52px] bg-viventa-magenta hover:bg-[#c20054] text-white font-extrabold rounded-xl text-xs flex items-center justify-center gap-2 shadow-lg shadow-pink-200 transition-all">
-                            <i data-lucide="download-cloud" class="w-4 h-4"></i>
-                            Descargar Certificado de Viabilidad (PDF)
-                        </button>
-                    </div>
-                </div>
-            `;
-            lucide.createIcons();
-        }
-
-        // Render Rejection UI
-        function displayRejection(reason, name1, name2, score, income, totalEgresos) {
-            const container = document.getElementById('result-payload');
-            const mainName = name1.split(' ')[0];
-            const secondaryName = name2 ? name2.split(' ')[0] : '';
-            const copFormatter = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 });
-
-            // Map reasons
-            let reasonTitle = "Perfil en Plan de Fortalecimiento";
-            let reasonExplain = "";
-            let priority_action = "";
-
-            if (reason === "edad_fuera_rango") {
-                reasonExplain = `La edad de los solicitantes se encuentra fuera de los límites aceptados por las entidades financieras aliadas. En el mercado de deudas hipotecarias internacionales, el rango general admisible se sitúa entre los 18 y los 74 años, variando según la política interna de cada entidad seleccionada para la radicación.`;
-                priority_action = "Recomendar al cliente que sume a un Co-Titular (por ejemplo, un hijo, sobrino o familiar de primer grado más joven) que cumpla con los rangos de edad requeridos para la postulación familiar.";
-            } else if (reason === "capacidad_endeudamiento_insuficiente") {
-                reasonExplain = `Los compromisos financieros fijos del cliente (${copFormatter.format(totalEgresos)} COP) en su país de residencia consumen un porcentaje elevado en comparación con los ingresos declarados o computables (${copFormatter.format(income)} COP). Su capacidad neta disponible para amortizar cuotas mensuales proyecta un cupo final menor a los $40.000.000 COP, inhabilitando un cupo mínimo hipotecario viable por políticas operativas de las entidades financieras aliadas de Viventa.`;
-                priority_action = "Aconsejar al cliente de manera constructiva consolidar deudas extranjeras o prepagar tarjetas de crédito con mayor cuota de pago mensual fija.";
-            } else if (reason === "collections_exterior") {
-                reasonExplain = `El cliente registra reportes de cobros coactivos, cuentas castigadas o Collections activas en el exterior. Los bancos en Colombia inhabilitan de inmediato cualquier radicación si el buró internacional presenta estatus de cobro de deudas que no cumple con el margen de excepciones de Bancolombia o Banco Unión.`;
-                priority_action = "Instruir al cliente a ponerse en contacto con la oficina de cobro extranjera, liquidar el pasivo y remitir el soporte físico de paz y salvo.";
-            } else if (reason === "mora_financiera_colombia") {
-                reasonExplain = `El cliente presenta reportes negativos de moras activas en el sector financiero de Colombia en Datacrédito o Cifin. El sistema nacional de radicación rechaza automáticamente el perfil para las tres entidades financieras.`;
-                priority_action = "Exigir el pago inmediato de las carteras en mora colombianas y adjuntar los certificados de paz y salvo para radicación manual por excepción.";
-            } else if (reason === "score_bajo") {
-                reasonExplain = `El score de crédito extranjero de ${score} puntos está por debajo del umbral mínimo exigido por nuestras entidades financieras aliadas de Viventa o el estatus migratorio reportado inactiva la elegibilidad por score mínimo.`;
-                priority_action = "Recomendar un plan de mejora de puntaje de 3 meses en el exterior, manteniendo consumos de tarjetas de crédito por debajo del 30% del cupo total.";
-            } else if (reason === "sin_estatus_regulado") {
-                reasonExplain = `El estatus migratorio reportado por el cliente en el exterior ("Sin estatus regularizado") restringe severamente la elegibilidad de Bancolombia y Davivienda, requiriendo un estatus regular estable para radicación exterior directa.`;
-                priority_action = "Para Bancolombia o Davivienda, anexar un co-titular con residencia permanente, ciudadanía o estatus laboral regulado en el exterior. Banco Unión permite continuar, pero exige un mínimo de 24 meses de permanencia.";
-            } else if (reason === "ingresos_insuficientes") {
-                reasonExplain = `Los ingresos familiares declarados están por debajo del límite de ingresos mínimos de referencia para radicación internacional. El mínimo absoluto para operar con Davivienda (la opción más flexible) es de 1 SMMLV ($1.750.905 COP).`;
-                priority_action = "Sugerir la unificación de ingresos sumando un Co-Titular directo en Colombia o en el exterior para robustecer la solicitud crediticia familiar.";
-            }
-
-            container.innerHTML = `
-                <div class="space-y-6 animate-in fade-in duration-500">
-                    <div class="text-center space-y-2">
-                        <div class="w-12 h-12 rounded-full bg-viventa-pink text-viventa-magenta flex items-center justify-center mx-auto shadow-sm">
-                            <i data-lucide="heart" class="w-6 h-6"></i>
-                        </div>
-                        <span class="text-[10px] font-bold uppercase tracking-wider text-viventa-magenta">RUTINA DE PREPARACIÓN DE CASO REQUERIDA</span>
-                        <h3 class="font-serif text-2xl font-extrabold text-viventa-black">${reasonTitle}</h3>
-                    </div>
-
-                    <!-- ADVISOR INTERNAL BREAKDOWN -->
-                    <div class="bg-slate-50 border border-slate-200 rounded-2xl p-5 space-y-4">
-                        <div>
-                            <span class="text-[9px] uppercase tracking-widest text-viventa-grayb font-extrabold block">Causa de No Viabilidad Actual</span>
-                            <p class="text-xs text-slate-700 mt-1 font-semibold leading-relaxed">${reasonExplain}</p>
-                        </div>
-                        <div class="border-t border-slate-200 pt-3">
-                            <span class="text-[9px] uppercase tracking-widest text-viventa-grayb font-extrabold block">Acción Comercial Recomendada</span>
-                            <p class="text-xs text-viventa-magenta mt-1 font-extrabold leading-relaxed">${priority_action}</p>
-                        </div>
-                    </div>
-
-                    <!-- EXPORT PDF WITH REASSURING CLIENT TONE -->
-                    <div class="bg-viventa-black text-white p-5 rounded-2xl flex flex-col sm:flex-row justify-between items-center gap-4">
-                        <div class="text-center sm:text-left space-y-1">
-                            <h5 class="text-xs font-bold text-viventa-yellow uppercase tracking-wider">Plan de Acción en PDF para el Cliente</h5>
-                            <p class="text-[11px] text-slate-300 font-medium">Descarga la carta formal en tono afirmativo y de mentoría para que motives al cliente a optimizar sus finanzas y radicar con nosotros próximamente.</p>
-                        </div>
-                        <button type="button" onclick="generateAccionPDF('${reason}', '${name1}', '${secondaryName}', ${score}, ${income}, ${totalEgresos})" class="px-5 h-[52px] bg-viventa-magenta hover:bg-[#c20054] text-white font-extrabold rounded-xl text-xs flex items-center justify-center gap-2 shadow-lg shrink-0 transition-all">
-                            <i data-lucide="download-cloud" class="w-4 h-4"></i>
-                            Descargar Plan PDF
-                        </button>
+                        ${downloadButtonHTML}
                     </div>
                 </div>
             `;
@@ -1725,7 +1749,10 @@
             doc.text("Condiciones estimadas de financiación", 20, boxStartY + 6);
             doc.setFont("Helvetica", "normal");
             doc.text(`Monto estimado de crédito: COP $ ${copFormatter.format(cachedApprovalData.amount)}`, 20, boxStartY + 12);
-            doc.text(`Plazo estimado: 20 años`, 20, boxStartY + 18);
+            
+            // Dynamic term evaluation in years (Union -> 15 years, others -> 20 years)
+            const termYears = cachedApprovalData.term ? (cachedApprovalData.term / 12) : 20;
+            doc.text(`Plazo estimado: ${termYears} años`, 20, boxStartY + 18);
 
             y = boxStartY + 30;
 
@@ -1782,135 +1809,7 @@
             doc.rect(0, 287, 210, 10, 'F');
 
             // Save formal concept PDF
-            doc.save(`Certificado_Viabilidad_EVF_${cachedApprovalData.name1.split(' ')[0]}.pdf`);
-        }
-
-        // PDF Generation using jsPDF aligning with Viventa Corporate Palette and Warm/Affirmative client tone (NEUTRED FOR BRANDS)
-        function generateAccionPDF(reason, name1, secondaryName, score, income, totalEgresos) {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-            const copFormatter = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 });
-
-            // Set dynamic date
-            const dateStr = new Date().toLocaleDateString('es-CO', { year: 'numeric', month: 'long', day: 'numeric' });
-
-            // Beautiful header colors and decoration (Viventa Brand style)
-            doc.setFillColor(50, 55, 85); // #323755 (Viventa Black)
-            doc.rect(0, 0, 210, 40, 'F');
-
-            // Header Text
-            doc.setTextColor(255, 255, 255);
-            doc.setFont("Helvetica", "bold");
-            doc.setFontSize(15);
-            doc.text("VIVENTA - PLAN DE FORTALECIMIENTO FINANCIERO", 15, 18);
-            
-            doc.setFont("Helvetica", "normal");
-            doc.setFontSize(10);
-            doc.setTextColor(230, 0, 100); // #E60064 (Viventa Magenta)
-            doc.text("Tu Guía Sincero y Mentor de Confianza en la Distancia", 15, 26);
-            doc.text(`Fecha de diagnóstico: ${dateStr}`, 15, 33);
-
-            // Body Setup
-            doc.setTextColor(50, 55, 85); // #323755
-            doc.setFont("Helvetica", "bold");
-            doc.setFontSize(11);
-            doc.text(`Destinatario: ${name1} ${secondaryName ? ' y ' + secondaryName : ''}`, 15, 55);
-
-            doc.setFont("Helvetica", "normal");
-            doc.setFontSize(10);
-            
-            let letterText = `Querido amigo ${name1.split(' ')[0]},\n\n` +
-                "Escribo esta carta con el afecto, respeto y la absoluta confianza que le tengo a un gran soñador en el exterior. " +
-                "Cruzar fronteras y abrirse paso en otra nación es una de las hazañas más valientes que un colombiano puede emprender. " +
-                "Hoy, tras analizar detenidamente tu diagnóstico crediticio, quiero transmitirte un mensaje con firme convicción de parte de todo el equipo Viventa: " +
-                "¡ESTO NO ES UN RECHAZO, ES SOLO EL INICIO DE UN CAMINO DE PREPARACIÓN EXCEPCIONAL!\n\n" +
-                "A veces, la vida nos pide hacer una pausa inteligente para organizar nuestras bases financieras. " +
-                "El análisis nos indica que tu perfil tiene un potencial tremendo, pero requerimos optimizar ciertos factores clave " +
-                "antes de presentarlo con absoluta seguridad a nuestras entidades financieras aliadas de primer nivel en Colombia.\n\n";
-
-            if (reason === "edad_fuera_rango") {
-                letterText += "TU PUNTO CLAVE DE MEJORA (POLÍTICAS DE EDAD DE LOS BANCOS):\n" +
-                    "Hemos identificado que la edad actual no se ajusta de forma exacta a los límites establecidos por las políticas de " +
-                    "las entidades aliadas en Colombia. Estas políticas son estrictas pero se estructuran para asegurar el seguro de vida del deudor.\n\n" +
-                    "PASOS DE ACCIÓN RECOMENDADOS:\n" +
-                    "1. La solución ideal en estos casos es sumar a un Co-Titular (como un hijo, neto o familiar de primer grado más joven).\n" +
-                    "2. De esta forma, el banco toma como referencia la edad del solicitante más joven para ampliar el plazo del crédito.\n" +
-                    "3. Con esta estructura familiar, podemos unificar ingresos de ambos y garantizar la viabilidad inmediata del desembolso.\n\n";
-            } else if (reason === "capacidad_endeudamiento_insuficiente") {
-                letterText += "TU PUNTO CLAVE DE MEJORA (CAPACIDAD DE ENDEUDAMIENTO):\n" +
-                    `Tus compromisos mensuales actuales de tarjetas y préstamos ascienden a ${copFormatter.format(totalEgresos)} COP mensuales, ` +
-                    `absorbiendo una porción importante de tu ingreso mensual de ${copFormatter.format(income)} COP.\n\n` +
-                    "PASOS DE ACCIÓN RECOMENDADOS:\n" +
-                    "1. Efectúa abonos extraordinarios dirigidos a saldar tarjetas de crédito con cuotas fijas altas.\n" +
-                    "2. Cancela el cupo de las tarjetas de crédito que no utilices activamente (los bancos calculan riesgo sobre el cupo total).\n" +
-                    "3. Evita adquirir deudas de consumo, vehículos o financiamientos rápidos durante los próximos 180 días.\n\n";
-            } else if (reason === "collections_exterior") {
-                letterText += "TU PUNTO CLAVE DE MEJORA (COLLECTIONS EN EL EXTERIOR):\n" +
-                    "Hemos detectado registros de cuentas castigadas (Collections) en el exterior. El sistema bancario de colocación remota " +
-                    "solicita limpieza total en historiales internacionales para viabilizar cupos de crédito.\n\n" +
-                    "PASOS DE ACCIÓN RECOMENDADOS:\n" +
-                    "1. Ponte en contacto con la entidad de cobranza, realiza un acuerdo de pago and exige tu paz y salvo físico.\n" +
-                    "2. Monitorea que tu score vuelva a tomar fuerza una vez el reporte negativo sea sabaneado.\n" +
-                    "3. Sigue ahorrando con disciplina para aumentar tu cuota inicial, lo que facilitará tu aprobación posterior.\n\n";
-            } else if (reason === "mora_financiera_colombia") {
-                letterText += "TU PUNTO CLAVE DE MEJORA (MORAS FINANCIERAS EN COLOMBIA):\n" +
-                    "Se registran alertas negativas vigentes en el sector financiero de Colombia. Sanear estas moras internas en Datacrédito " +
-                    "y Cifin es el paso primordial para abrir nuevamente las puertas de financiamiento.\n\n" +
-                    "PASOS DE ACCIÓN RECOMENDADOS:\n" +
-                    "1. Efectúa el pago total del saldo pendiente con la entidad financiera acreedora.\n" +
-                    "2. Solicita el paz y salvo oficial físico y radícalo ante Viventa para respaldar tu saneamiento de cartera.\n" +
-                    "3. Mantén un perfil libre de deudas morosas durante este período de transición.\n" +
-                    "4. Reestablece tu perfil de radicación con el equipo de soporte de Viventa.\n\n";
-            } else if (reason === "score_bajo") {
-                letterText += "TU PUNTO CLAVE DE MEJORA:\n" +
-                    `Hemos identificado que tu credit score en el exterior se encuentra en ${score} puntos. El sistema financiero de vivienda ` +
-                    "colombiana exige habitualmente un comportamiento crediticio de primer nivel. Esto es algo que podemos solucionar de " +
-                    "forma metódica en el corto plazo. ¡Estoy convencido de que lo lograrás pronto!\n\n" +
-                    "PASOS DE ACCIÓN RECOMENDADOS:\n" +
-                    "1. Utiliza tus tarjetas de crédito con disciplina: no consumas más del 30% del cupo y realiza el pago completo 3 días antes del corte.\n" +
-                    "2. Corrige cualquier reporte erróneo en agencias crediticias de tu país de residencia.\n" +
-                    "3. Mantén tus deudas en el exterior al mínimo, priorizando el saldo de préstamos de consumo rápido.\n" +
-                    "4. Reestablece tu perfil de radicación con el equipo de soporte de Viventa.\n\n";
-            } else if (reason === "sin_estatus_regulado") {
-                letterText += "TU PUNTO CLAVE DE MEJORA:\n" +
-                    "Actualmente, la consolidación documental de tu estatus migratorio requiere de mayores soportes. La estabilidad de " +
-                    "residencia o un permiso de trabajo con antigüedad son credenciales sumamente valiosas ante los analistas de crédito en Colombia.\n\n" +
-                    "PASOS DE ACCIÓN RECOMENDADOS:\n" +
-                    "1. Consolida la constancia de ingresos a través de cuentas bancarias formales del exterior por un período mínimo de 6 meses.\n" +
-                    "2. Procura adjuntar en tu próxima simulación un Co-titular que resida en Colombia o con un estatus migratorio formal consolidado.\n" +
-                    "3. Solicita declaraciones de impuestos estables (Taxes) del país donde habitas hoy.\n" +
-                    "4. Reestablece tu perfil de radicación con el equipo de soporte de Viventa.\n\n";
-            } else {
-                letterText += "TU PUNTO CLAVE DE MEJORA:\n" +
-                    `Tus ingresos declarados equivalen a $${copFormatter.format(income)} COP. Para adquirir vivienda desde el exterior, ` +
-                    "las entidades buscan certificar una capacidad de endeudamiento familiar un poco más holgada que permita mitigar el riesgo cambiario.\n\n" +
-                    "PASOS DE ACCIÓN RECOMENDADOS:\n" +
-                    "1. Apóyate en un segundo proponente o co-titular (cónyuge, padres, hermanos) para sumar capacidad de pago conjunta.\n" +
-                    "2. Declara y certifica tus ingresos complementarios (servicios adicionales, honorarios o negocios propios con estados financieros bancarios).\n" +
-                    "3. Enfócate en consolidar un ahorro del 35% al 40% del valor comercial de la vivienda, reduciendo el monto a financiar.\n" +
-                    "4. Reestablece tu perfil de radicación con el equipo de soporte de Viventa.\n\n";
-            }
-
-            letterText += "TU CRONOGRAMA DE TRABAJO (Próximos 6 meses):\n" +
-                "• Mes 1 a 3: Ordenar deudas prioritarias, liquidar cuotas de consumo y tarjetas en el exterior.\n" +
-                "• Mes 4 y 5: Consolidar extractos bancarios impecables, sin sobregiros and con capacidad de ahorro.\n" +
-                "• Mes 6: Volver a simular con tu amigo de confianza Viventa para dar el paso definitivo de aprobación.\n\n" +
-                "Recuerda siempre: las grandes metas se construyen con bloques de disciplina diaria. " +
-                "Confío plenamente en tu tenacidad. Tu sueño de tener casa propio en tu amada patria está cada vez más cerca. " +
-                "¡Estás en el camino correcto y Viventa te estará esperando para celebrarlo!\n\n" +
-                "Con gran aprecio y fe,\n" +
-                "Tu Amigo Sabio y Consejero Financiero Viventa";
-
-            // Split text to fit page beautifully
-            const splitLines = doc.splitTextToSize(letterText, 180);
-            doc.text(splitLines, 15, 63);
-
-            // Footer of Page 1 decoration
-            doc.setFillColor(230, 0, 100); // #E60064
-            doc.rect(0, 287, 210, 10, 'F');
-
-            // Save the document
-            doc.save(`Plan_Fortalecimiento_Viventa_${name1.split(' ')[0]}.pdf`);
+            doc.save("Certificado_Viabilidad_EVF_Viventa.pdf");
         }
 
         // Reset Simulator parameters
