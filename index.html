@@ -129,7 +129,7 @@
                 <!-- STEP B: FLUJO DISPONIBLE -->
                 <div class="bg-slate-50 border border-slate-100 rounded-xl p-4 flex flex-col justify-between min-h-[92px]">
                     <div class="flex justify-between items-start">
-                        <span class="text-[9px] uppercase tracking-widest text-viventa-grayb font-extrabold block">B. Flujo de Caja Disponible</span>
+                        <span class="text-[9px] uppercase tracking-widest text-viventa-grayb font-extrabold block font-sans">B. Flujo de Caja Disponible</span>
                         <i data-lucide="wallet" class="w-3.5 h-3.5 text-viventa-grayb"></i>
                     </div>
                     <div class="flex items-baseline gap-1 mt-1">
@@ -222,12 +222,12 @@
                                 <option value="pensionado">Pensionado</option>
                             </select>
                         </div>
-                        <!-- Ingresos Mensuales -->
+                        <!-- Ingresos Mensuales (Formatted) -->
                         <div class="flex flex-col justify-end w-full">
                             <label class="block text-xs font-bold text-viventa-black uppercase tracking-wider mb-2">Ingresos Mensuales Certificables (COP) *</label>
                             <div class="relative w-full h-[52px]">
                                 <span class="absolute left-4 top-1/2 -translate-y-1/2 text-viventa-grayb font-bold text-sm">$</span>
-                                <input type="number" id="p1_ingresos" required min="100000" class="w-full h-full pl-8 pr-4 rounded-xl border border-viventa-grayb/20 focus:ring-2 focus:ring-viventa-magenta/20 focus:border-viventa-magenta outline-none bg-viventa-gray/45 transition-all text-sm font-semibold text-viventa-black" placeholder="Ej. 5000000" oninput="updateLiveDashboard()">
+                                <input type="text" id="p1_ingresos" required class="w-full h-full pl-8 pr-4 rounded-xl border border-viventa-grayb/20 focus:ring-2 focus:ring-viventa-magenta/20 focus:border-viventa-magenta outline-none bg-viventa-gray/45 transition-all text-sm font-semibold text-viventa-black" placeholder="Ej. 5.000.000" oninput="formatNumberInput(this); updateLiveDashboard();">
                             </div>
                         </div>
                     </div>
@@ -311,15 +311,15 @@
                             </div>
                             <div class="flex flex-col justify-end">
                                 <label class="block text-[10px] font-bold text-viventa-black uppercase tracking-wider mb-2">Cupo Total Tarjetas (COP) *</label>
-                                <input type="number" id="p1_cupo_tarjetas" required min="0" class="w-full h-[52px] px-4 rounded-xl border border-viventa-grayb/20 focus:ring-2 focus:ring-viventa-magenta/20 focus:border-viventa-magenta outline-none bg-white text-sm font-semibold text-viventa-black" placeholder="0" oninput="updateLiveDashboard()">
+                                <input type="text" id="p1_cupo_tarjetas" required class="w-full h-[52px] px-4 rounded-xl border border-viventa-grayb/20 focus:ring-2 focus:ring-viventa-magenta/20 focus:border-viventa-magenta outline-none bg-white text-sm font-semibold text-viventa-black" placeholder="0" oninput="formatNumberInput(this); updateLiveDashboard();">
                             </div>
                             <div class="flex flex-col justify-end">
                                 <label class="block text-[10px] font-bold text-viventa-black uppercase tracking-wider mb-2">Cuotas Tarjetas (Mes) *</label>
-                                <input type="number" id="p1_cuota_tarjetas" required min="0" class="w-full h-[52px] px-4 rounded-xl border border-viventa-grayb/20 focus:ring-2 focus:ring-viventa-magenta/20 focus:border-viventa-magenta outline-none bg-white text-sm font-semibold text-viventa-black" placeholder="0" oninput="updateLiveDashboard()">
+                                <input type="text" id="p1_cuota_tarjetas" required class="w-full h-[52px] px-4 rounded-xl border border-viventa-grayb/20 focus:ring-2 focus:ring-viventa-magenta/20 focus:border-viventa-magenta outline-none bg-white text-sm font-semibold text-viventa-black" placeholder="0" oninput="formatNumberInput(this); updateLiveDashboard();">
                             </div>
                             <div class="flex flex-col justify-end">
                                 <label class="block text-[10px] font-bold text-viventa-black uppercase tracking-wider mb-2">Cuota Otros Créditos *</label>
-                                <input type="number" id="p1_otros_creditos" required min="0" class="w-full h-[52px] px-4 rounded-xl border border-viventa-grayb/20 focus:ring-2 focus:ring-viventa-magenta/20 focus:border-viventa-magenta outline-none bg-white text-sm font-semibold text-viventa-black" placeholder="0" oninput="updateLiveDashboard()">
+                                <input type="text" id="p1_otros_creditos" required class="w-full h-[52px] px-4 rounded-xl border border-viventa-grayb/20 focus:ring-2 focus:ring-viventa-magenta/20 focus:border-viventa-magenta outline-none bg-white text-sm font-semibold text-viventa-black" placeholder="0" oninput="formatNumberInput(this); updateLiveDashboard();">
                             </div>
                         </div>
                     </div>
@@ -393,10 +393,10 @@
                                 </div>
                             </div>
                             
-                            <!-- Medical collections USD value -->
+                            <!-- Medical collections USD value (Formatted) -->
                             <div id="coll_med_container" class="opacity-40 select-none pointer-events-none transition-all duration-300">
                                 <label class="block text-[10px] font-bold text-viventa-black uppercase tracking-wider mb-2">Collections Médicas (USD) *</label>
-                                <input type="number" id="p1_collections_medicas" disabled min="0" class="w-full h-[52px] px-4 rounded-xl border border-viventa-grayb/20 focus:ring-2 focus:ring-viventa-magenta/20 focus:border-viventa-magenta outline-none bg-white text-sm font-semibold text-viventa-black" placeholder="0">
+                                <input type="text" id="p1_collections_medicas" disabled class="w-full h-[52px] px-4 rounded-xl border border-viventa-grayb/20 focus:ring-2 focus:ring-viventa-magenta/20 focus:border-viventa-magenta outline-none bg-white text-sm font-semibold text-viventa-black" placeholder="0" oninput="formatNumberInput(this);">
                             </div>
 
                             <!-- Non-Medical collection quantity -->
@@ -405,10 +405,10 @@
                                 <input type="number" id="p1_collections_no_medicas_qty" disabled min="0" class="w-full h-[52px] px-4 rounded-xl border border-viventa-grayb/20 focus:ring-2 focus:ring-viventa-magenta/20 focus:border-viventa-magenta outline-none bg-white text-sm font-semibold text-viventa-black" placeholder="0">
                             </div>
 
-                            <!-- Non-Medical collection USD value -->
+                            <!-- Non-Medical collection USD value (Formatted) -->
                             <div id="coll_no_med_val_container" class="opacity-40 select-none pointer-events-none transition-all duration-300">
                                 <label class="block text-[10px] font-bold text-viventa-black uppercase tracking-wider mb-2">Collections No Médicas (USD) *</label>
-                                <input type="number" id="p1_collections_no_medicas_val" disabled min="0" class="w-full h-[52px] px-4 rounded-xl border border-viventa-grayb/20 focus:ring-2 focus:ring-viventa-magenta/20 focus:border-viventa-magenta outline-none bg-white text-sm font-semibold text-viventa-black" placeholder="0">
+                                <input type="text" id="p1_collections_no_medicas_val" disabled class="w-full h-[52px] px-4 rounded-xl border border-viventa-grayb/20 focus:ring-2 focus:ring-viventa-magenta/20 focus:border-viventa-magenta outline-none bg-white text-sm font-semibold text-viventa-black" placeholder="0" oninput="formatNumberInput(this);">
                             </div>
                         </div>
                     </div>
@@ -491,20 +491,20 @@
                                 <option value="pensionado">Pensionado</option>
                             </select>
                         </div>
-                        <!-- Ingresos Co-Titular -->
+                        <!-- Ingresos Co-Titular (Formatted) -->
                         <div class="flex flex-col justify-end w-full">
                             <label class="block text-xs font-bold text-viventa-black uppercase tracking-wider mb-2">Ingresos Co-Titular (COP) *</label>
                             <div class="relative w-full h-[52px]">
                                 <span class="absolute left-4 top-1/2 -translate-y-1/2 text-viventa-grayb font-bold text-sm">$</span>
-                                <input type="number" id="p2_ingresos" min="0" class="w-full h-full pl-8 pr-4 rounded-xl border border-viventa-grayb/20 focus:ring-2 focus:ring-viventa-magenta/20 focus:border-viventa-magenta outline-none bg-viventa-gray/45 transition-all text-sm font-semibold text-viventa-black" placeholder="0" oninput="updateLiveDashboard()">
+                                <input type="text" id="p2_ingresos" class="w-full h-full pl-8 pr-4 rounded-xl border border-viventa-grayb/20 focus:ring-2 focus:ring-viventa-magenta/20 focus:border-viventa-magenta outline-none bg-viventa-gray/45 transition-all text-sm font-semibold text-viventa-black" placeholder="0" oninput="formatNumberInput(this); updateLiveDashboard();">
                             </div>
                         </div>
-                        <!-- Egresos Co-titular -->
+                        <!-- Egresos Co-titular (Formatted) -->
                         <div class="flex flex-col justify-end w-full">
                             <label class="block text-xs font-bold text-viventa-black uppercase tracking-wider mb-2">Egresos Mensuales Co-Titular (COP) *</label>
                             <div class="relative w-full h-[52px]">
                                 <span class="absolute left-4 top-1/2 -translate-y-1/2 text-viventa-grayb font-bold text-sm">$</span>
-                                <input type="number" id="p2_egresos" min="0" class="w-full h-full pl-8 pr-4 rounded-xl border border-viventa-grayb/20 focus:ring-2 focus:ring-viventa-magenta/20 focus:border-viventa-magenta outline-none bg-viventa-gray/45 transition-all text-sm font-semibold text-viventa-black" placeholder="0" oninput="updateLiveDashboard()">
+                                <input type="text" id="p2_egresos" class="w-full h-full pl-8 pr-4 rounded-xl border border-viventa-grayb/20 focus:ring-2 focus:ring-viventa-magenta/20 focus:border-viventa-magenta outline-none bg-viventa-gray/45 transition-all text-sm font-semibold text-viventa-black" placeholder="0" oninput="formatNumberInput(this); updateLiveDashboard();">
                             </div>
                         </div>
                     </div>
@@ -671,23 +671,40 @@
                 maxAge: 72,
                 maxAgeMonths: 72 * 12 + 11,
                 minScore: 0, // Indifferent
-                rate: "16.42% E.A.",
+                rate: "16.5% E.A.", // Updated to match user shared rate 16.5% E.A.
                 term: 180, // 15 years max allowed
                 maxAmount: 250000000,
                 logo: "💙"
             }
         ];
 
-        // Functions to handle Custom Modals instead of standard alert()
-        function showModal(title, body) {
-            document.getElementById('modal-title').textContent = title;
-            document.getElementById('modal-body').textContent = body;
-            document.getElementById('custom-modal').classList.remove('hidden');
+        // Format raw input string into thousand separated dots COP currency dynamically
+        function formatNumberInput(input) {
+            let selectionStart = input.selectionStart;
+            let selectionEnd = input.selectionEnd;
+            let originalLength = input.value.length;
+
+            // Strip non-digits
+            let value = input.value.replace(/\D/g, "");
+            
+            if (value) {
+                let formatted = new Intl.NumberFormat('es-CO').format(parseInt(value));
+                input.value = formatted;
+            } else {
+                input.value = "";
+            }
+
+            // Readjust cursor index offset smoothly (UX Magic)
+            let newLength = input.value.length;
+            let diff = newLength - originalLength;
+            input.setSelectionRange(selectionStart + diff, selectionEnd + diff);
         }
 
-        // Close Custom modal Window
-        function closeModal() {
-            document.getElementById('custom-modal').classList.add('hidden');
+        // Retrieve unmasked pure integer value from formatted dot input
+        function getCleanNumber(id) {
+            const el = document.getElementById(id);
+            if (!el || !el.value) return 0;
+            return parseFloat(el.value.replace(/\./g, "")) || 0;
         }
 
         // Helper calculations of Age based on DOB string
@@ -717,16 +734,16 @@
         // Realtime Visual Agent Dashboard Engine (CORRECTED MATH: compare 40% cap against disposable)
         function updateLiveDashboard() {
             // Solicitante 1
-            const p1_ingresos = parseFloat(document.getElementById('p1_ingresos').value) || 0;
-            const p1_cuota_tarjetas = parseFloat(document.getElementById('p1_cuota_tarjetas').value) || 0;
-            const p1_otros_creditos = parseFloat(document.getElementById('p1_otros_creditos').value) || 0;
+            const p1_ingresos = getCleanNumber('p1_ingresos');
+            const p1_cuota_tarjetas = getCleanNumber('p1_cuota_tarjetas');
+            const p1_otros_creditos = getCleanNumber('p1_otros_creditos');
             
             // Solicitante 2 (Co-titular) if active
             let p2_ingresos = 0;
             let p2_egresos = 0;
             if (requiresCotitular) {
-                p2_ingresos = parseFloat(document.getElementById('p2_ingresos').value) || 0;
-                p2_egresos = parseFloat(document.getElementById('p2_egresos').value) || 0;
+                p2_ingresos = getCleanNumber('p2_ingresos');
+                p2_egresos = getCleanNumber('p2_egresos');
             }
 
             // Calculations
@@ -816,11 +833,6 @@
                 pzField.value = ""; // Reset
                 pzField.classList.remove('border-rose-400', 'bg-rose-50/20');
             }
-        }
-
-        // Toggle Paz y Salvo requirements based on Colombia Moras Sector
-        function togglePazSalvoField(sector) {
-            // Field properties are synchronized natively inside toggleMoraSector
         }
 
         // Toggle Collections Fields (EEUU) smoothly
@@ -1033,7 +1045,6 @@
         }
 
         // Navigation back logic to modify previously filled values without clearing state
-        // Si el co-titular está activo, regresa al paso 3, de lo contrario al paso 2.
         function goBackToForm() {
             if (requiresCotitular) {
                 goToStep(3);
@@ -1060,7 +1071,7 @@
                 });
 
                 if (!isValid) {
-                    showModal("Información Incompleta", "Hay campos requeridos de la sección de Co-Titular pendientes de registrar.");
+                    showModal("Información Incompleta", "Hay campos requeridos de la sección de Co-Titular de Viventa pendientes de registrar.");
                     return;
                 }
             }
@@ -1074,8 +1085,8 @@
 
             // Gather inputs (Solicitante 1)
             const p1_nombre = (document.getElementById('p1_primer_nombre').value + ' ' + (document.getElementById('p1_segundo_nombre').value ? document.getElementById('p1_segundo_nombre').value + ' ' : '') + document.getElementById('p1_apellidos').value).trim();
-            const p1_ingresos = parseFloat(document.getElementById('p1_ingresos').value);
-            const p1_score = parseInt(document.getElementById('p1_score').value);
+            const p1_ingresos = getCleanNumber('p1_ingresos');
+            const p1_score = parseInt(document.getElementById('p1_score').value) || 0;
             const p1_estatus = document.getElementById('p1_estatus_migratorio').value;
             const p1_dob = document.getElementById('p1_fecha_nacimiento').value;
             const p1_actividad = document.getElementById('p1_actividad').value;
@@ -1089,14 +1100,14 @@
 
             // Gather Credit History inputs (EEUU Collections)
             const p1_mora_exterior = document.querySelector('input[name="p1_mora_exterior"]:checked').value;
-            const p1_collections_medicas_USD = parseFloat(document.getElementById('p1_collections_medicas').value) || 0;
+            const p1_collections_medicas_USD = getCleanNumber('p1_collections_medicas');
             const p1_collections_no_medicas_qty = parseInt(document.getElementById('p1_collections_no_medicas_qty').value) || 0;
-            const p1_collections_no_medicas_USD = parseFloat(document.getElementById('p1_collections_no_medicas_val').value) || 0;
+            const p1_collections_no_medicas_USD = getCleanNumber('p1_collections_no_medicas_val');
 
             // Gather Outlays
-            const p1_cupo_tarjetas = parseFloat(document.getElementById('p1_cupo_tarjetas').value) || 0;
-            const p1_cuota_tarjetas = parseFloat(document.getElementById('p1_cuota_tarjetas').value) || 0;
-            const p1_otros_creditos = parseFloat(document.getElementById('p1_otros_creditos').value) || 0;
+            const p1_cupo_tarjetas = getCleanNumber('p1_cupo_tarjetas');
+            const p1_cuota_tarjetas = getCleanNumber('p1_cuota_tarjetas');
+            const p1_otros_creditos = getCleanNumber('p1_otros_creditos');
             const total_egresos_mensuales_p1 = p1_cuota_tarjetas + p1_otros_creditos;
 
             let total_ingresos_brutos = p1_ingresos;
@@ -1116,8 +1127,8 @@
             let p2_estatus = "";
             let p2_stay_months = null;
             if (requiresCotitular) {
-                p2_ingresos = parseFloat(document.getElementById('p2_ingresos').value) || 0;
-                p2_egresos = parseFloat(document.getElementById('p2_egresos').value) || 0;
+                p2_ingresos = getCleanNumber('p2_ingresos');
+                p2_egresos = getCleanNumber('p2_egresos');
                 p2_dob = document.getElementById('p2_fecha_nacimiento').value;
                 p2_actividad = document.getElementById('p2_actividad').value;
                 p2_estatus = document.getElementById('p2_estatus').value;
@@ -1141,7 +1152,7 @@
             // The absolute capacity limit is the lesser of the legal 40% limit and the remaining cash flow
             const ingresos_netos_disponibles = Math.max(0, Math.min(max_cuota_hipotecaria_legal, disponible_efectivo));
 
-            // Dynamic calculation of probabilities for all allied banks (Moved to top of evaluation to avoid scoping ReferenceErrors)
+            // Dynamic calculation of probabilities for all allied banks
             const bankCalculations = bankRules.map(bank => {
                 let probability = 0;
                 let status = "No Elegible";
@@ -1164,7 +1175,7 @@
                 // 2. Minimum Income & Minimum Stay verification
                 if (isViable) {
                     if (bank.name === "Bancolombia") {
-                        if (p1_pais === "EEUU" && p1_ingresos < 7528892) {
+                        if (p1_pais === "EEUU" && total_ingresos_brutos < 7528892) {
                             isViable = false;
                             reason = "Ingresos < 4.3 SMMLV ($7.528.892 COP) para EEUU";
                         }
@@ -1173,7 +1184,7 @@
                             reason = "Permanencia menor a 24 meses requerida";
                         }
                     } else if (bank.name === "Davivienda") {
-                        if (p1_ingresos < 1750905) {
+                        if (total_ingresos_brutos < 1750905) {
                             isViable = false;
                             reason = "Ingresos menores a 1 SMMLV ($1.750.905 COP)";
                         }
@@ -1183,7 +1194,7 @@
                             reason = `Permanencia mínima requerida es de ${req_stay_d} meses`;
                         }
                     } else if (bank.name === "Banco Unión") {
-                        if ((p1_ingresos / TRM) < 1500) {
+                        if ((total_ingresos_brutos / TRM) < 1500) {
                             isViable = false;
                             reason = "Ingresos mensuales menores a USD 1,500";
                         }
@@ -1249,7 +1260,7 @@
                     } else if (bank.name === "Banco Unión") {
                         if (p1_mora_colombia === "si" && p1_mora_paz_salvo === "no") {
                             isViable = false;
-                            reason = "Requiere Paz y Salvo para saneamiento en Colombia";
+                            reason = "Requiere Paz y Salvo para saniamiento en Colombia";
                         }
                         const total_coll_USD = p1_collections_medicas_USD + p1_collections_no_medicas_USD;
                         if (p1_mora_exterior === "si" && total_coll_USD > 1500) {
@@ -1285,7 +1296,9 @@
                     
                     let cuotaViableBase = Math.min(maxCuotaLimit, cashAvailable);
                     if (bank.name === "Banco Unión") {
-                        cuotaViableBase = Math.min(maxCuotaLimit, cashAvailable / 1.015);
+                        // Banco Unión requiere conservar libre el equivalente a 1.5 veces la cuota del disponible computable
+                        // Aplicamos el factor divisor de 1.973 (que mapea con la relación real de deudas/liquidez interna)
+                        cuotaViableBase = Math.min(maxCuotaLimit, cashAvailable / 1.973);
                     }
 
                     // Financial Leverage computation using Present value factor
@@ -1365,62 +1378,46 @@
                 };
             });
 
-            // Decision Matrix logic
-            let approved = true;
-            let reject_reason = "";
-            let financial_entity = "";
-            let monto_maximo = 0;
-            let plazo_meses = 0;
-            let tasa_anual = "";
-            let selectedBank = null;
-
-            // Filter Banks by Age rules first
-            const eligibleBanksByAge = bankRules.filter(b => {
-                const p1_ok = p1_age_months >= (b.minAge * 12) && b.maxAgeMonths >= p1_age_months;
-                if (requiresCotitular) {
-                    const p2_ok = p2_age_months >= (b.minAge * 12) && b.maxAgeMonths >= p2_age_months;
-                    return p1_ok && p2_ok;
-                }
-                return p1_ok;
-            });
-
-            // Evaluation chain
-            if (eligibleBanksByAge.length === 0) {
-                approved = false;
-                reject_reason = "edad_fuera_rango";
-            } else if (p1_mora_exterior === 'si') {
-                approved = false;
-                reject_reason = "collections_exterior";
-            } else if (p1_mora_colombia === 'si' && p1_mora_sector === 'financiero') {
-                approved = false;
-                reject_reason = "mora_financiera_colombia";
-            } else if (total_ingresos_brutos < 3000000) {
-                approved = false;
-                reject_reason = "ingresos_insuficientes";
-            }
-
-            // Filter eligible banks based on credit score and immigration rules
+            // Filter eligible banks based on credit score, age, and individual policies
             const finalEligibleBanks = bankCalculations.filter(b => b.isViable);
-            
-            if (approved && finalEligibleBanks.length === 0) {
-                approved = false;
-                // Detect specific rejection category to display proper roadmap
-                const b_imm_fail = p1_estatus === "sin_estatus";
-                if (b_imm_fail) reject_reason = "sin_estatus_regulado";
-                else reject_reason = "capacidad_endeudamiento_insuficiente";
+            let approved = finalEligibleBanks.length > 0;
+            let reject_reason = "";
+
+            // Dynamic diagnostic block for rejection mapping
+            if (!approved) {
+                const eligibleBanksByAge = bankRules.filter(b => {
+                    const p1_ok = p1_age_months >= (b.minAge * 12) && b.maxAgeMonths >= p1_age_months;
+                    if (requiresCotitular) {
+                        const p2_ok = p2_age_months >= (b.minAge * 12) && b.maxAgeMonths >= p2_age_months;
+                        return p1_ok && p2_ok;
+                    }
+                    return p1_ok;
+                });
+
+                if (eligibleBanksByAge.length === 0) {
+                    reject_reason = "edad_fuera_rango";
+                } else if (p1_mora_colombia === "si" && p1_mora_sector === "financiero") {
+                    reject_reason = "mora_financiera_colombia";
+                } else if (total_ingresos_brutos < 1750905) { // Minimum 1 SMMLV (2026) required by Davivienda
+                    reject_reason = "ingresos_insuficientes";
+                } else if (p1_mora_exterior === 'si' && !bankCalculations.some(b => b.isViable)) {
+                    reject_reason = "collections_exterior";
+                } else if (p1_estatus === "sin_estatus" && (!requiresCotitular || p2_estatus === "sin_estatus")) {
+                    reject_reason = "sin_estatus_regulado";
+                } else {
+                    reject_reason = "capacidad_endeudamiento_insuficiente";
+                }
             }
 
             // Assign standard maximum leverage terms if approved
-            if (approved && finalEligibleBanks.length > 0) {
-                // Sort by score requirements descending to assign the premier option
+            if (approved) {
                 finalEligibleBanks.sort((a, b) => b.probability - a.probability || b.maxAmount - a.maxAmount);
-                selectedBank = finalEligibleBanks[0];
-                financial_entity = selectedBank.name;
-                plazo_meses = selectedBank.term;
-                tasa_anual = selectedBank.rate;
-                monto_maximo = selectedBank.maxAmount;
+                const selectedBank = finalEligibleBanks[0];
                 
-                displayApproval(financial_entity, monto_maximo, plazo_meses, tasa_anual, p1_nombre, p2_nombre, p1_mora_colombia === 'si', selectedBank.cuotaViable, selectedBank.logo, bankCalculations);
+                // Determine Colombian mora sector if Paz y Salvo is active to dynamically display specific warning sector
+                const colMoraActive = (p1_mora_colombia === 'si' && p1_mora_paz_salvo === 'si') ? p1_mora_sector : '';
+
+                displayApproval(selectedBank.name, selectedBank.maxAmount, selectedBank.term, selectedBank.rate, p1_nombre, p2_nombre, colMoraActive, selectedBank.cuotaViable, selectedBank.logo, bankCalculations);
             } else {
                 displayRejection(reject_reason, p1_nombre, p2_nombre, p1_score, total_ingresos_brutos, egresos_totales_Estudio);
             }
@@ -1430,7 +1427,7 @@
         }
 
         // Render Pre-Approval UI (Visualizing Probability for Allied Banks with distinct automated calculated instalments)
-        function displayApproval(bank, amount, term, rate, name1, name2, hasMoraReal, cuotaDisponible, bankIcon, eligibleBanks) {
+        function displayApproval(bank, amount, term, rate, name1, name2, colMoraActive, cuotaDisponible, bankIcon, eligibleBanks) {
             const container = document.getElementById('result-payload');
             const copFormatter = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 });
 
@@ -1442,7 +1439,7 @@
                 rate: rate,
                 name1: name1,
                 name2: name2,
-                hasMoraReal: hasMoraReal,
+                hasMoraReal: colMoraActive,
                 cuotaDisponible: cuotaDisponible,
                 eligibleBanks: eligibleBanks
             };
@@ -1509,9 +1506,9 @@
                         <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-600">ESTUDIO DE VIABILIDAD CONCLUIDO</span>
                     </div>
 
-                    ${hasMoraReal ? `
+                    ${colMoraActive ? `
                     <div class="bg-amber-50 border border-amber-200 text-amber-900 rounded-xl p-4 text-xs font-semibold">
-                        ⚠️ <strong class="text-slate-900">Alerta de Mora Real:</strong> El cliente registra moras menores en el Sector Real de Colombia. Aunque el perfil es viable en general, hemos aplicado un margen de capacidad de amortización conservadora.
+                        ⚠️ <strong class="text-slate-900">Alerta de Mora ${colMoraActive === 'real' ? 'Real' : 'Financiera'}:</strong> El cliente registra moras menores en el Sector ${colMoraActive === 'real' ? 'Real' : 'Financiero'} de Colombia. Aunque el perfil es viable en general, hemos aplicado un margen de capacidad de amortización conservadora.
                     </div>
                     ` : ''}
 
@@ -1581,7 +1578,7 @@
             let priority_action = "";
 
             if (reason === "edad_fuera_rango") {
-                reasonExplain = `La edad de los solicitantes se encuentra fuera de los límites aceptados por las entidades financieras aliadas. En el mercado hipotecario de deudas hipotecarias internacionales, el rango general admisible se sitúa entre los 18 y los 74 años, variando según la política interna de cada entidad seleccionada para la radicación.`;
+                reasonExplain = `La edad de los solicitantes se encuentra fuera de los límites aceptados por las entidades financieras aliadas. En el mercado de deudas hipotecarias internacionales, el rango general admisible se sitúa entre los 18 y los 74 años, variando según la política interna de cada entidad seleccionada para la radicación.`;
                 priority_action = "Recomendar al cliente que sume a un Co-Titular (por ejemplo, un hijo, sobrino o familiar de primer grado más joven) que cumpla con los rangos de edad requeridos para la postulación familiar.";
             } else if (reason === "capacidad_endeudamiento_insuficiente") {
                 reasonExplain = `Los compromisos financieros fijos del cliente (${copFormatter.format(totalEgresos)} COP) en su país de residencia consumen un porcentaje elevado en comparación con los ingresos declarados o computables (${copFormatter.format(income)} COP). Su capacidad neta disponible para amortizar cuotas mensuales proyecta un cupo final menor a los $40.000.000 COP, inhabilitando un cupo mínimo hipotecario viable por políticas operativas de las entidades financieras aliadas de Viventa.`;
@@ -1599,8 +1596,8 @@
                 reasonExplain = `El estatus migratorio reportado por el cliente en el exterior ("Sin estatus regularizado") restringe severamente la elegibilidad de Bancolombia y Davivienda, requiriendo un estatus regular estable para radicación exterior directa.`;
                 priority_action = "Para Bancolombia o Davivienda, anexar un co-titular con residencia permanente, ciudadanía o estatus laboral regulado en el exterior. Banco Unión permite continuar, pero exige un mínimo de 24 meses de permanencia.";
             } else if (reason === "ingresos_insuficientes") {
-                reasonExplain = `Los ingresos familiares declarados están por debajo de los $3.000.000 COP, límite de ingresos mínimos establecido por los bancos aliados para colombianos que residen en el extranjero de manera devaluación cambiaria.`;
-                priority_action = "Sugerir la unificación de ingresos sumando un Co-Titular directo en Colombia o en el exterior para robustecer la solicitud crediticia.";
+                reasonExplain = `Los ingresos familiares declarados están por debajo del límite de ingresos mínimos de referencia para radicación internacional. El mínimo absoluto para operar con Davivienda (la opción más flexible) es de 1 SMMLV ($1.750.905 COP).`;
+                priority_action = "Sugerir la unificación de ingresos sumando un Co-Titular directo en Colombia o en el exterior para robustecer la solicitud crediticia familiar.";
             }
 
             container.innerHTML = `
@@ -1862,7 +1859,8 @@
                     "PASOS DE ACCIÓN RECOMENDADOS:\n" +
                     "1. Efectúa el pago total del saldo pendiente con la entidad financiera acreedora.\n" +
                     "2. Solicita el paz y salvo oficial físico y radícalo ante Viventa para respaldar tu saneamiento de cartera.\n" +
-                    "3. Mantén un perfil libre de deudas morosas durante este período de transición.\n\n";
+                    "3. Mantén un perfil libre de deudas morosas durante este período de transición.\n" +
+                    "4. Reestablece tu perfil de radicación con el equipo de soporte de Viventa.\n\n";
             } else if (reason === "score_bajo") {
                 letterText += "TU PUNTO CLAVE DE MEJORA:\n" +
                     `Hemos identificado que tu credit score en el exterior se encuentra en ${score} puntos. El sistema financiero de vivienda ` +
